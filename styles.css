@@ -1,6 +1,6 @@
 /* ============================
-   FULL CSS — ORIGINAL + MOBILE
-   (No color / glow / logic changes)
+   FULL CSS — UPDATED
+   (Fixed: Opaque Side Panel & Mobile Project Layout)
    ============================ */
 
 /* VARIABLES */
@@ -12,6 +12,7 @@
   --accent2:#ff7ad1; /* pink */
   --glass: rgba(255,255,255,0.03);
 }
+
 /* BASE */
 *{box-sizing:border-box}
 html,body{height:100%;margin:0;font-family:Inter, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto; background: radial-gradient(1200px 600px at 10% 10%, rgba(110,231,255,0.035), transparent 8%), radial-gradient(900px 500px at 95% 90%, rgba(255,122,209,0.03), transparent 6%), var(--bg); color:#e6eef6;}
@@ -52,7 +53,7 @@ h2{margin:0 0 10px}
   padding:8px 12px;
   border-radius:999px;
   font-weight:700;
-  background:transparent;                 /* outline only */
+  background:transparent;                /* outline only */
   border:1px solid rgba(255,255,255,0.25); /* default outline */
   color:#eaf6ff;
 }
@@ -78,7 +79,7 @@ h2{margin:0 0 10px}
 .project-title{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 16px;cursor:pointer;user-select:none;transition:background .2s ease;border-bottom:1px solid rgba(255,255,255,0.02);}
 .project-title:hover{background:linear-gradient(90deg, rgba(110,231,255,0.015), rgba(255,122,209,0.015));}
 .project-name{font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace; font-weight:700;font-size:15px;letter-spacing:0.6px;color:#e6f8ff;display:flex;align-items:center;gap:10px}
-.project-arrow{width:36px;height:36px;border-radius:10px;display:grid;place-items:center;background:rgba(255,255,255,0.02);transition:transform .35s cubic-bezier(.2,.9,.2,1), background .2s}
+.project-arrow{width:36px;height:36px;border-radius:10px;display:grid;place-items:center;background:rgba(255,255,255,0.02);transition:transform .35s cubic-bezier(.2,.9,.2,1), background .2s; flex-shrink: 0;}
 .project-title.open .project-arrow{transform:rotate(180deg);background:linear-gradient(90deg,var(--accent1),var(--accent2));color:#021025}
 .project-desc{max-height:0;overflow:hidden;padding:0 16px;transition:max-height .45s cubic-bezier(.2,.9,.2,1), padding .2s;}
 .project-desc-inner{padding:12px 0;color:var(--muted);line-height:1.5;border-top:1px dashed rgba(255,255,255,0.02)}
@@ -97,6 +98,8 @@ h2{margin:0 0 10px}
   display:inline-block;
   font-family: 'Inter', ui-sans-serif, system-ui;
   letter-spacing:0.4px;
+  /* FIX: Forces text to stay on one line so it doesn't squash vertically */
+  white-space: nowrap; 
 }
 .project-name .subtitle {
   color:var(--muted);
@@ -227,9 +230,12 @@ h2{margin:0 0 10px}
   width:220px;
   padding:18px;
   border-radius:16px;
-  background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.005));
-  border:1px solid rgba(255,255,255,0.03);
-  box-shadow:0 25px 45px rgba(2,6,23,0.75);
+  
+  /* FIX: Changed from transparent gradient to Solid Dark color */
+  background: #050505; 
+  
+  border:1px solid rgba(255,255,255,0.1); /* Slightly brighter border to define edge */
+  box-shadow:0 25px 45px rgba(0,0,0,0.9);
   transform:translateX(-260px);
   opacity:0;
   pointer-events:none;
@@ -438,7 +444,24 @@ h2{margin:0 0 10px}
     padding-right: 12px;
   }
 
-  /* ensure project internals don't overflow horizontally */
+  /* FIX: Mobile Projects Layout */
+  .project-title {
+    /* Allow wrapping so text doesn't get crushed */
+    flex-wrap: wrap; 
+  }
+  .project-name {
+    /* Ensure the name area can shrink properly */
+    min-width: 0;
+    flex: 1;
+    display: flex;
+    flex-wrap: wrap; 
+    gap: 6px;
+  }
+  .project-name .brand {
+     /* Prevent vertical letters - keep text side by side */
+     white-space: nowrap; 
+     font-size: 13px; /* Slightly smaller on mobile to fit better */
+  }
   .project-desc, .project-desc-inner, .project-title {
     word-break: break-word;
     overflow-wrap: break-word;
@@ -472,7 +495,10 @@ h2{margin:0 0 10px}
     box-shadow: 0 25px 45px rgba(2,6,23,0.85);
     overflow-y: auto !important;
     -webkit-overflow-scrolling: touch !important;
-    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.005));
+    
+    /* FIX: Solid Black background on Mobile so you don't see content behind */
+    background: #000000 !important;
+    
     border: 1px solid rgba(255,255,255,0.03);
   }
 
