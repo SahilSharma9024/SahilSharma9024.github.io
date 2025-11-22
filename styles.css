@@ -54,22 +54,10 @@ h2{margin:0 0 10px}
   border-radius:999px;
   font-weight:700;
   background:transparent;                /* outline only */
-  border:1px solid rgba(255,255,255,0.25); /* default outline */
+  border:1px solid #6ee7ff; /* default outline */
   color:#eaf6ff;
 }
 
-/* different outline colors for each skill pill */
-.skills .skill:nth-child(1){border-color:#6ee7ff;}   /* Python - aqua */
-.skills .skill:nth-child(2){border-color:#22c55e;}   /* C - green */
-.skills .skill:nth-child(3){border-color:#f97316;}   /* C++ - orange */
-.skills .skill:nth-child(4){border-color:#a855f7;}   /* ML */
-.skills .skill:nth-child(5){border-color:#ec4899;}   /* AI Automation - pink */
-.skills .skill:nth-child(6){border-color:#0ea5e9;}   /* Web Automation - blue */
-.skills .skill:nth-child(7){border-color:#eab308;}   /* Automation scripting - yellow */
-.skills .skill:nth-child(8){border-color:#facc15;}   /* Prompt engineering - amber */
-.skills .skill:nth-child(9){border-color:#14b8a6;}   /* Data Handling - teal */
-.skills .skill:nth-child(10){border-color:#f472b6;}  /* Backend Development - soft pink */
-.skills .skill:nth-child(11){border-color:#38bdf8;}  /* LLM integration - sky */
 
 /* ----- PROJECTS: integrated improved styles ----- */
 .projects{margin-top:12px}
