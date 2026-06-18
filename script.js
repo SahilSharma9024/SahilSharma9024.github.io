@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const mainContent = document.getElementById('mainContent');
   const welcomeTypewriter = document.getElementById('welcomeTypewriter');
   const welcomeSubtitle = document.querySelector('.welcome-screen__subtitle');
-  
+
   const text = 'Hi, I\'m Sahil Sharma.\n';
   const typeSpeed = 250; // ms per letter
   const pauseAfter = 2500; // ms to wait after typing completes
@@ -14,12 +14,12 @@ document.addEventListener('DOMContentLoaded', () => {
     welcomeSubtitle.style.opacity = '0';
     welcomeSubtitle.style.transition = 'opacity 0.4s ease';
   }
-  
+
   // Typewriter effect for "Welcome"
   if (welcomeTypewriter) {
     let i = 0;
     welcomeTypewriter.textContent = '';
-    
+
     function typeWriter() {
       if (i < text.length) {
         welcomeTypewriter.textContent += text.charAt(i);
@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(typeWriter, typeSpeed);
       }
     }
-    
+
     // Start typing after a brief delay
     setTimeout(typeWriter, 100);
 
@@ -39,15 +39,15 @@ document.addEventListener('DOMContentLoaded', () => {
       }, 100 + typingDuration);
     }
   }
-  
+
   // Transition logic
   if (welcomeScreen && mainContent) {
     // Show welcome screen for pauseAfter ms after typing completes, then transition
     const totalWaitTime = 100 + (text.length * typeSpeed) + pauseAfter;
-    
+
     setTimeout(() => {
       welcomeScreen.classList.add('fade-out');
-      
+
       // After fade-out animation completes, show main content
       setTimeout(() => {
         welcomeScreen.style.display = 'none';
@@ -69,14 +69,14 @@ const links = {
   github: 'https://github.com/Sahilsharma9024',
   twitter: 'https://x.com/Sahilsharma9024?t=gq1AdoLdHz1GwJ6lldpOFQ&s=09',
   email: 'sahilsharmaas2006@gmail.com',
-  whatsapp: '' 
+  whatsapp: ''
 };
 
 // Gmail compose URL helper
-function gmailComposeUrl(email, subject = '', body = ''){
+function gmailComposeUrl(email, subject = '', body = '') {
   return 'https://mail.google.com/mail/?view=cm&fs=1&to=' + encodeURIComponent(email)
-         + (subject ? '&su=' + encodeURIComponent(subject) : '')
-         + (body ? '&body=' + encodeURIComponent(body) : '');
+    + (subject ? '&su=' + encodeURIComponent(subject) : '')
+    + (body ? '&body=' + encodeURIComponent(body) : '');
 }
 
 const gmailCTA = gmailComposeUrl(
@@ -120,15 +120,15 @@ document.getElementById('link-whatsapp').href = links.whatsapp;
 // Update email anchors to open Gmail compose instead of mailto
 const emailAnchors = document.querySelectorAll('#link-email, #emailText');
 emailAnchors.forEach(a => {
-  if(!a) return;
+  if (!a) return;
   a.href = gmailCTA;
   a.target = '_blank';
   a.rel = 'noopener';
-  if(a.id === 'emailText') a.textContent = links.email;
+  if (a.id === 'emailText') a.textContent = links.email;
 });
 
 const headerGmail = document.getElementById('link-gmail');
-if(headerGmail){
+if (headerGmail) {
   headerGmail.href = gmailCTA;
   headerGmail.target = '_blank';
   headerGmail.rel = 'noopener';
@@ -144,7 +144,7 @@ const map = {
 };
 Object.entries(map).forEach(([id, href]) => {
   const el = document.getElementById(id);
-  if(!el) return;
+  if (!el) return;
   el.href = href;
   el.target = '_blank';
   el.rel = 'noopener';
@@ -157,17 +157,17 @@ const resumeDL = document.getElementById('resumeDL');
 if (resumeURL && resumeURL !== '#') {
   resumeBtn.href = resumeURL;
   resumeDL.href = resumeURL;
-  resumeDL.style.display='inline-block';
+  resumeDL.style.display = 'inline-block';
 } else {
-  resumeBtn.style.display='none';
+  resumeBtn.style.display = 'inline-block';
 }
 
 // Copy email
-function copyEmail(){
+function copyEmail() {
   const email = links.email;
   navigator.clipboard.writeText(email)
-    .then(()=> alert('Email copied — ' + email))
-    .catch(()=> alert('Copy failed — copy manually.'));
+    .then(() => alert('Email copied — ' + email))
+    .catch(() => alert('Copy failed — copy manually.'));
 }
 
 // ----- Improved Project toggle behavior -----
@@ -178,47 +178,47 @@ document.addEventListener('DOMContentLoaded', () => {
     const desc = p.querySelector('.project-desc');
     const arrow = p.querySelector('.project-arrow');
 
-    function open(){
+    function open() {
       p.classList.add('open');
       title.classList.add('open');
-      title.setAttribute('aria-expanded','true');
-      desc.setAttribute('aria-hidden','false');
+      title.setAttribute('aria-expanded', 'true');
+      desc.setAttribute('aria-hidden', 'false');
       const h = desc.scrollHeight;
       desc.style.maxHeight = h + 'px';
-      if(arrow) arrow.textContent = '▴';
+      if (arrow) arrow.textContent = '▴';
       p.animate(
         [
-          { boxShadow:'0 0 0 rgba(110,231,255,0.0)' },
-          { boxShadow:'0 20px 60px rgba(110,231,255,0.03)' }
+          { boxShadow: '0 0 0 rgba(110,231,255,0.0)' },
+          { boxShadow: '0 20px 60px rgba(110,231,255,0.03)' }
         ],
-        { duration:420, easing:'ease-out' }
+        { duration: 420, easing: 'ease-out' }
       );
     }
 
-    function close(){
+    function close() {
       p.classList.remove('open');
       title.classList.remove('open');
-      title.setAttribute('aria-expanded','false');
-      desc.setAttribute('aria-hidden','true');
+      title.setAttribute('aria-expanded', 'false');
+      desc.setAttribute('aria-hidden', 'true');
       desc.style.maxHeight = '0px';
-      if(arrow) arrow.textContent = '▾';
+      if (arrow) arrow.textContent = '▾';
     }
 
-    function toggle(){
-      if(desc.style.maxHeight && desc.style.maxHeight !== '0px') close();
+    function toggle() {
+      if (desc.style.maxHeight && desc.style.maxHeight !== '0px') close();
       else open();
     }
 
     title.addEventListener('click', toggle);
-    title.addEventListener('keydown', (e)=>{
-      if(e.key === 'Enter' || e.key === ' ') {
+    title.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
         e.preventDefault();
         toggle();
       }
     });
 
-    document.addEventListener('click', (ev)=>{
-      if(!p.contains(ev.target) && p.classList.contains('open')) close();
+    document.addEventListener('click', (ev) => {
+      if (!p.contains(ev.target) && p.classList.contains('open')) close();
     });
   });
 });
@@ -229,49 +229,49 @@ const panelToggle = document.getElementById('panelToggle');
 const sidePanel = document.getElementById('sidePanel');
 
 /* === UPDATED: SYNCS WITH MOBILE BEHAVIOR (adds body.panel-open) === */
-function openPanel(){
-  if(!sidePanel || !panelToggle) return;
+function openPanel() {
+  if (!sidePanel || !panelToggle) return;
   sidePanel.classList.add('open');
   panelToggle.classList.add('open');
-  panelToggle.setAttribute('aria-expanded','true');
-  sidePanel.setAttribute('aria-hidden','false');
+  panelToggle.setAttribute('aria-expanded', 'true');
+  sidePanel.setAttribute('aria-hidden', 'false');
 
   // Required for mobile drawer behavior
   document.body.classList.add('panel-open');
 }
 
-function closePanel(){
-  if(!sidePanel || !panelToggle) return;
+function closePanel() {
+  if (!sidePanel || !panelToggle) return;
   sidePanel.classList.remove('open');
   panelToggle.classList.remove('open');
-  panelToggle.setAttribute('aria-expanded','false');
-  sidePanel.setAttribute('aria-hidden','true');
+  panelToggle.setAttribute('aria-expanded', 'false');
+  sidePanel.setAttribute('aria-hidden', 'true');
 
   // Remove mobile lock
   document.body.classList.remove('panel-open');
 }
 
-function togglePanel(){
-  if(sidePanel.classList.contains('open')) closePanel();
+function togglePanel() {
+  if (sidePanel.classList.contains('open')) closePanel();
   else openPanel();
 }
 
-if(panelToggle)
-  panelToggle.addEventListener('click', (e)=>{
+if (panelToggle)
+  panelToggle.addEventListener('click', (e) => {
     e.stopPropagation();
     togglePanel();
   });
 
 // click outside closes panel
-document.addEventListener('click', (e)=>{
-  if(!sidePanel || !panelToggle) return;
-  if(sidePanel.contains(e.target) || panelToggle.contains(e.target)) return;
+document.addEventListener('click', (e) => {
+  if (!sidePanel || !panelToggle) return;
+  if (sidePanel.contains(e.target) || panelToggle.contains(e.target)) return;
   closePanel();
 });
 
 // ESC closes panel
-document.addEventListener('keydown', (e)=>{
-  if(e.key === 'Escape') closePanel();
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') closePanel();
 });
 
 // scroll + highlight
@@ -279,9 +279,9 @@ navButtons.forEach(btn => {
   btn.addEventListener('click', () => {
     const targetId = btn.getAttribute('data-scroll-target');
     const target = document.getElementById(targetId);
-    if(!target) return;
+    if (!target) return;
 
-    target.scrollIntoView({behavior:'smooth', block:'start'});
+    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
     target.classList.remove('focus-pulse');
     void target.offsetWidth;
     target.classList.add('focus-pulse');
