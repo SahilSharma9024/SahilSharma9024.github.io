@@ -151,7 +151,7 @@ Object.entries(map).forEach(([id, href]) => {
 });
 
 // Resume
-const resumeURL = '#';
+const resumeURL = 'resume.pdf';
 const resumeBtn = document.getElementById('resumeBtn');
 const resumeDL = document.getElementById('resumeDL');
 if (resumeURL && resumeURL !== '#') {
