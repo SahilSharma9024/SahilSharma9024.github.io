@@ -228,7 +228,6 @@ const navButtons = document.querySelectorAll('[data-scroll-target]');
 const panelToggle = document.getElementById('panelToggle');
 const sidePanel = document.getElementById('sidePanel');
 
-/* === UPDATED: SYNCS WITH MOBILE BEHAVIOR (adds body.panel-open) === */
 function openPanel() {
   if (!sidePanel || !panelToggle) return;
   sidePanel.classList.add('open');
@@ -236,7 +235,6 @@ function openPanel() {
   panelToggle.setAttribute('aria-expanded', 'true');
   sidePanel.setAttribute('aria-hidden', 'false');
 
-  // Required for mobile drawer behavior
   document.body.classList.add('panel-open');
 }
 
@@ -247,7 +245,6 @@ function closePanel() {
   panelToggle.setAttribute('aria-expanded', 'false');
   sidePanel.setAttribute('aria-hidden', 'true');
 
-  // Remove mobile lock
   document.body.classList.remove('panel-open');
 }
 
@@ -274,19 +271,34 @@ document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape') closePanel();
 });
 
-// scroll + highlight
+// === FINAL SCROLL FIX USING ANIMATION FRAMES ===
 navButtons.forEach(btn => {
-  btn.addEventListener('click', () => {
+  btn.addEventListener('click', (e) => {
+    // Only prevent default if it's an anchor link trying to natively jump
+    if (btn.tagName.toLowerCase() === 'a') {
+      e.preventDefault();
+    }
+
     const targetId = btn.getAttribute('data-scroll-target');
     const target = document.getElementById(targetId);
     if (!target) return;
 
-    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    target.classList.remove('focus-pulse');
-    void target.offsetWidth;
-    target.classList.add('focus-pulse');
-    setTimeout(() => target.classList.remove('focus-pulse'), 900);
-
+    // 1. Instantly remove the CSS lock
     closePanel();
+
+    // 2. Wait for the browser to sync the DOM changes
+    requestAnimationFrame(() => {
+      // 3. Small timeout ensures the layout engine has processed the scroll unlock
+      setTimeout(() => {
+        // Native, clean scroll execution
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+        // Highlight logic
+        target.classList.remove('focus-pulse');
+        void target.offsetWidth; // Trigger reflow
+        target.classList.add('focus-pulse');
+        setTimeout(() => target.classList.remove('focus-pulse'), 900);
+      }, 50);
+    });
   });
 });
