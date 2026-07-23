@@ -31,6 +31,7 @@
 </head>
 
 <body>
+    <div class="bubbles" id="bubbles" aria-hidden="true"></div>
 
     <!-- ================= WELCOME ================= -->
     <div id="welcomeScreen" class="welcome-screen">
@@ -107,6 +108,9 @@
             <a href="#connect">Connect</a>
             <a class="btn btn-primary" href="resume.pdf" target="_blank" rel="noopener">View Resume</a>
         </nav>
+
+        <!-- Blur/dim layer behind the open mobile drawer -->
+        <div class="nav-scrim" id="navScrim" aria-hidden="true"></div>
 
         <!-- ---------- Hero ---------- -->
         <section class="hero grid-bg" id="top">
