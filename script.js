@@ -407,14 +407,11 @@ const WELCOME_MS = 3600;   // how long the intro screen stays up
     /* ---------- Mobile menu (navbar burger) ---------- */
     const burger = $('#navBurger');
     const mobileMenu = $('#mobileMenu');
-    const navScrim = $('#navScrim');
 
     function setMobileMenu(open) {
         if (!burger || !mobileMenu) return;
         mobileMenu.classList.toggle('open', open);
         burger.classList.toggle('open', open);
-        if (navScrim) navScrim.classList.toggle('open', open);
-        root.classList.toggle('nav-open', open);
         burger.setAttribute('aria-expanded', String(open));
         burger.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
     }
@@ -463,14 +460,17 @@ const WELCOME_MS = 3600;   // how long the intro screen stays up
         items.forEach((el) => io.observe(el));
     }
 
-    /* ---------- Project panels ---------- */
+    /* ---------- Project accordion ---------- */
     $$('.project').forEach((project) => {
         const head = $('.project-head', project);
         const body = $('.project-body', project);
         if (!head || !body) return;
 
         function open() {
-            // Independent panels- any number of projects can stay expanded.
+            // Accordion: only one project expanded at a time.
+            $$('.project.open').forEach((other) => {
+                if (other !== project) collapse(other);
+            });
             project.classList.add('open');
             head.setAttribute('aria-expanded', 'true');
             body.style.maxHeight = body.scrollHeight + 'px';
@@ -638,33 +638,6 @@ const WELCOME_MS = 3600;   // how long the intro screen stays up
 
             requestAnimationFrame(frame);
         })();
-    })();
-
-    /* ---------- Background bubbles ---------- */
-    (function bubbles() {
-        const layer = $('#bubbles');
-        if (!layer) return;
-
-        // Softest tint of each brand hue. Nothing saturated — these should
-        // barely register until you look for them.
-        const PALETTE = ['#ede9fe', '#fce7f3', '#dbeafe', '#dcfce7', '#fef9c3', '#cffafe'];
-
-        const rand = (min, max) => min + Math.random() * (max - min);
-
-        const count = window.innerWidth < 700 ? 26 : 44;
-        const frag = document.createDocumentFragment();
-
-        for (let i = 0; i < count; i += 1) {
-            const b = document.createElement('span');
-            b.className = 'bubble';
-            b.style.setProperty('--x', rand(0, 98).toFixed(2) + 'vw');
-            b.style.setProperty('--y', rand(0, 98).toFixed(2) + 'vh');
-            b.style.setProperty('--size', rand(5, 13).toFixed(1) + 'px');
-            b.style.setProperty('--c', PALETTE[Math.floor(Math.random() * PALETTE.length)]);
-            frag.appendChild(b);
-        }
-
-        layer.appendChild(frag);
     })();
 
     /* ---------- Footer year ---------- */
