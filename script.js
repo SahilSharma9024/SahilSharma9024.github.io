@@ -640,6 +640,33 @@ const WELCOME_MS = 3600;   // how long the intro screen stays up
         })();
     })();
 
+    /* ---------- Background bubbles ---------- */
+    (function bubbles() {
+        const layer = $('#bubbles');
+        if (!layer) return;
+
+        // Softest tint of each brand hue. Nothing saturated — these should
+        // barely register until you look for them.
+        const PALETTE = ['#ede9fe', '#fce7f3', '#dbeafe', '#dcfce7', '#fef9c3', '#cffafe'];
+
+        const rand = (min, max) => min + Math.random() * (max - min);
+
+        const count = window.innerWidth < 700 ? 26 : 44;
+        const frag = document.createDocumentFragment();
+
+        for (let i = 0; i < count; i += 1) {
+            const b = document.createElement('span');
+            b.className = 'bubble';
+            b.style.setProperty('--x', rand(0, 98).toFixed(2) + 'vw');
+            b.style.setProperty('--y', rand(0, 98).toFixed(2) + 'vh');
+            b.style.setProperty('--size', rand(5, 13).toFixed(1) + 'px');
+            b.style.setProperty('--c', PALETTE[Math.floor(Math.random() * PALETTE.length)]);
+            frag.appendChild(b);
+        }
+
+        layer.appendChild(frag);
+    })();
+
     /* ---------- Footer year ---------- */
     const year = $('#year');
     if (year) year.textContent = new Date().getFullYear();
