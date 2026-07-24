@@ -438,10 +438,12 @@ a {
     /* 50vw on a small phone is too cramped for the resume button. */
     min-width: 250px;
     z-index: 59;
+    bottom: 0;
+    width: 50vw;
+    min-width: 250px;
     background: var(--bg);
     border-left: 1px solid var(--line-strong);
     box-shadow: -16px 0 36px -14px rgba(0, 0, 0, .35);
-    /* Top padding clears the 68px navbar. */
     padding: 84px 18px 24px;
     display: grid;
     align-content: start;
@@ -484,6 +486,7 @@ a {
 :root.nav-open body {
     overflow: hidden;
 }
+
 
 .mobile-menu a {
     padding: 12px 14px;
@@ -666,13 +669,33 @@ a {
     height: 21px;
 }
 
-.pad-lav { background: var(--p-lav); }
-.pad-mint { background: var(--p-mint); }
-.pad-sky { background: var(--p-sky); }
-.pad-peach { background: var(--p-peach); }
-.pad-rose { background: var(--p-rose); }
-.pad-lemon { background: var(--p-lemon); }
-.pad-slate { background: var(--p-slate); }
+.pad-lav {
+    background: var(--p-lav);
+}
+
+.pad-mint {
+    background: var(--p-mint);
+}
+
+.pad-sky {
+    background: var(--p-sky);
+}
+
+.pad-peach {
+    background: var(--p-peach);
+}
+
+.pad-rose {
+    background: var(--p-rose);
+}
+
+.pad-lemon {
+    background: var(--p-lemon);
+}
+
+.pad-slate {
+    background: var(--p-slate);
+}
 
 /* ---------- Welcome screen ------------------------------------------------- */
 
@@ -741,7 +764,9 @@ a {
 }
 
 @keyframes caret {
-    50% { opacity: 0; }
+    50% {
+        opacity: 0;
+    }
 }
 
 .welcome-sub {
@@ -782,7 +807,9 @@ a {
 }
 
 @keyframes fill {
-    to { width: 100%; }
+    to {
+        width: 100%;
+    }
 }
 
 .welcome-screen.fade-out {
@@ -1405,8 +1432,13 @@ a {
 }
 
 @keyframes pulse {
-    0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--brand) 45%, transparent); }
-    100% { box-shadow: 0 0 0 18px transparent; }
+    0% {
+        box-shadow: 0 0 0 0 color-mix(in srgb, var(--brand) 45%, transparent);
+    }
+
+    100% {
+        box-shadow: 0 0 0 18px transparent;
+    }
 }
 
 /* ---------- Reveal --------------------------------------------------------- */
@@ -1567,6 +1599,7 @@ a {
 /* ---------- Print ---------------------------------------------------------- */
 
 @media print {
+
     .topbar,
     .panel-toggle,
     .side-panel,
