@@ -405,30 +405,60 @@ a {
     transform: translateY(-6px) rotate(-45deg);
 }
 
-/* Dropdown that hangs off the fixed navbar */
+/* Half-width drawer down the right edge, full height.*/
 .mobile-menu {
     position: fixed;
-    top: 68px;
-    left: 0;
+    top: 0;
     right: 0;
     z-index: 59;
+    bottom: 0;
+    width: 50vw;
+    min-width: 250px;
     background: var(--bg);
-    border-bottom: 1px solid var(--line-strong);
-    box-shadow: 0 12px 30px -10px rgba(0, 0, 0, .3);
-    padding: 14px 20px 20px;
+    border-left: 1px solid var(--line-strong);
+    box-shadow: -16px 0 36px -14px rgba(0, 0, 0, .35);
+    padding: 84px 18px 24px;
     display: grid;
     gap: 4px;
-    transform: translateY(-12px);
-    opacity: 0;
+    overflow-y: auto;
+    transform: translateX(100%);
     visibility: hidden;
-    transition: opacity .26s ease, transform .26s cubic-bezier(.2, .8, .2, 1), visibility .26s;
+    transition: transform .3s cubic-bezier(.2, .8, .2, 1), visibility .3s;
 }
 
 .mobile-menu.open {
-    opacity: 1;
     visibility: visible;
     transform: none;
 }
+
+/* Blurs and dims the page behind the open drawer. */
+.nav-scrim {
+    position: fixed;
+    inset: 0;
+    z-index: 58;
+    background: rgba(15, 23, 42, .3);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity .3s ease, visibility .3s;
+}
+
+:root[data-theme="dark"] .nav-scrim {
+    background: rgba(0, 0, 0, .45);
+}
+
+.nav-scrim.open {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Hold the page still while the drawer is open. */
+:root.nav-open,
+:root.nav-open body {
+    overflow: hidden;
+}
+
 
 .mobile-menu a {
     padding: 12px 14px;
@@ -611,13 +641,33 @@ a {
     height: 21px;
 }
 
-.pad-lav { background: var(--p-lav); }
-.pad-mint { background: var(--p-mint); }
-.pad-sky { background: var(--p-sky); }
-.pad-peach { background: var(--p-peach); }
-.pad-rose { background: var(--p-rose); }
-.pad-lemon { background: var(--p-lemon); }
-.pad-slate { background: var(--p-slate); }
+.pad-lav {
+    background: var(--p-lav);
+}
+
+.pad-mint {
+    background: var(--p-mint);
+}
+
+.pad-sky {
+    background: var(--p-sky);
+}
+
+.pad-peach {
+    background: var(--p-peach);
+}
+
+.pad-rose {
+    background: var(--p-rose);
+}
+
+.pad-lemon {
+    background: var(--p-lemon);
+}
+
+.pad-slate {
+    background: var(--p-slate);
+}
 
 /* ---------- Welcome screen ------------------------------------------------- */
 
@@ -686,7 +736,9 @@ a {
 }
 
 @keyframes caret {
-    50% { opacity: 0; }
+    50% {
+        opacity: 0;
+    }
 }
 
 .welcome-sub {
@@ -727,7 +779,9 @@ a {
 }
 
 @keyframes fill {
-    to { width: 100%; }
+    to {
+        width: 100%;
+    }
 }
 
 .welcome-screen.fade-out {
@@ -1350,8 +1404,13 @@ a {
 }
 
 @keyframes pulse {
-    0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--brand) 45%, transparent); }
-    100% { box-shadow: 0 0 0 18px transparent; }
+    0% {
+        box-shadow: 0 0 0 0 color-mix(in srgb, var(--brand) 45%, transparent);
+    }
+
+    100% {
+        box-shadow: 0 0 0 18px transparent;
+    }
 }
 
 /* ---------- Reveal --------------------------------------------------------- */
@@ -1512,6 +1571,7 @@ a {
 /* ---------- Print ---------------------------------------------------------- */
 
 @media print {
+
     .topbar,
     .panel-toggle,
     .side-panel,
