@@ -660,6 +660,157 @@
                         </div>
                     </article>
 
+                    <!-- TeamPulse -->
+                    <article class="card project reveal" data-id="teampulse">
+                        <button class="project-head" type="button" aria-expanded="false"
+                            aria-controls="body-teampulse">
+                            <span class="project-id">
+                                <span class="pad pad-lav" aria-hidden="true">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                        stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                                        <circle cx="9" cy="7" r="4" />
+                                        <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
+                                    </svg>
+                                </span>
+                                <span class="project-name">
+                                    <span class="brand">TeamPulse</span>
+                                    <span class="subtitle">Team Operations Platform</span>
+                                </span>
+                            </span>
+                            <span class="project-meta">
+                                <span class="tag pad-lav">TEAM OPS</span>
+                                <span class="arrow" aria-hidden="true">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                        <polyline points="6 9 12 15 18 9" />
+                                    </svg>
+                                </span>
+                            </span>
+                        </button>
+
+                        <div class="project-body" id="body-teampulse">
+                            <div class="project-body-inner">
+                                <div class="pblock">
+                                    <h4>Description</h4>
+                                    <p>A comprehensive team operations platform I built during my internship to unify
+                                        everything a working team needs to run — meetings, daily standups and task
+                                        tracking, attendance and leave, objectives and KPIs, a collaborative wiki, and
+                                        real-time notifications — into a single role-aware web application. Built for
+                                        Admins, Team Leads, and Members, it replaces the organization's scatter of
+                                        spreadsheets, chat threads, and calendar invites with one place where work is
+                                        planned, tracked, reviewed, and documented. Automated background jobs handle the
+                                        recurring housekeeping — attendance close-outs, leave accrual, and scheduled
+                                        reminders — so the system keeps itself up to date without manual intervention.</p>
+                                </div>
+
+                                <div class="pblock">
+                                    <h4>Highlights</h4>
+                                    <ul>
+                                        <li><strong>Role-based access:</strong> cleanly separated experiences for Admins,
+                                            Team Leads, and Members, with authorization enforced so each person sees and
+                                            manages only what they should.</li>
+                                        <li><strong>Meetings suite:</strong> scheduling with approvals, a calendar view,
+                                            live meeting rooms with real-time chat, Google Meet link integration, minutes
+                                            capture, and automated minutes summaries sent to participants.</li>
+                                        <li><strong>Standups &amp; task board:</strong> create, assign, and track tasks
+                                            through their lifecycle, with comments, issue threads, reassignment, and
+                                            evidence-based finalization.</li>
+                                        <li><strong>Weekly &amp; long-term planning:</strong> agenda and progress cycles
+                                            for the week plus 3-, 6-, and 12-month horizons, each with scheduled review
+                                            reminders.</li>
+                                        <li><strong>Attendance &amp; leave:</strong> self-service attendance, disputes
+                                            and corrections, leave requests with lead approval, holiday management, and a
+                                            full leave engine with per-designation policies, automatic monthly accrual,
+                                            caps, and year-end lapse.</li>
+                                        <li><strong>Objectives &amp; KPIs:</strong> define objectives, run periodic
+                                            check-ins, and capture KPI snapshots for performance tracking.</li>
+                                        <li><strong>Collaborative wiki:</strong> real-time multi-user editing over
+                                            WebSockets, with both a rich (Doc) editor and a Markdown mode, safe HTML
+                                            sanitization, and lossless conversion between formats.</li>
+                                        <li><strong>Dashboards &amp; reporting:</strong> global and per-team dashboards
+                                            with point-in-time snapshots and CSV export.</li>
+                                        <li><strong>Real-time notifications &amp; mentions:</strong> in-app notification
+                                            panel with unread counts, live delivery, de-duplication, and @-mention search
+                                            across the app.</li>
+                                        <li><strong>Multi-channel delivery:</strong> email (SMTP) and WhatsApp for
+                                            reminders, summaries, and alerts.</li>
+                                        <li><strong>Responsive UI:</strong> mobile-first layouts, adaptive navigation,
+                                            and cache-busted assets.</li>
+                                    </ul>
+                                </div>
+
+                                <div class="pblock">
+                                    <h4>Architecture &amp; Workflow</h4>
+                                    <ul>
+                                        <li>Members log daily standups and progress; leads plan work, review
+                                            submissions, and finalize tasks with evidence and approvals.</li>
+                                        <li>Meetings are scheduled, approved, and run in live rooms with real-time chat;
+                                            minutes are captured and summarized automatically to attendees.</li>
+                                        <li>Attendance and leave requests flow to leads for approval; approvals
+                                            automatically adjust leave balances, and attendance never falsely marks a
+                                            member absent on an approved-leave day.</li>
+                                        <li>Background services run continuously — accruing leave monthly, closing out
+                                            attendance and tasks daily, and pushing review and standup reminders on
+                                            schedule.</li>
+                                        <li>Teams document processes in a shared wiki, editing concurrently with live
+                                            sync, while notifications and mentions keep everyone in the loop across
+                                            email, WhatsApp, and in-app channels.</li>
+                                    </ul>
+                                </div>
+
+                                <div class="pblock">
+                                    <h4>Tech Stack</h4>
+                                    <div class="tech-list">
+                                        <span class="chip">C#</span>
+                                        <span class="chip">ASP.NET Core 9 (MVC)</span>
+                                        <span class="chip">EF Core 9</span>
+                                        <span class="chip">SQL Server</span>
+                                        <span class="chip">ASP.NET Core Identity</span>
+                                        <span class="chip">SignalR</span>
+                                        <span class="chip">.NET Hosted Services</span>
+                                        <span class="chip">Markdig</span>
+                                        <span class="chip">ReverseMarkdown</span>
+                                        <span class="chip">HtmlSanitizer</span>
+                                        <span class="chip">Google Meet</span>
+                                        <span class="chip">SMTP</span>
+                                        <span class="chip">WhatsApp</span>
+                                        <span class="chip">Razor Views</span>
+                                        <span class="chip">Bootstrap 5</span>
+                                        <span class="chip">JavaScript</span>
+                                        <span class="chip">Bootstrap Icons</span>
+                                    </div>
+                                </div>
+
+                                <div class="pblock">
+                                    <h4>My Role</h4>
+                                    <p>I designed and built the platform end to end for the organization during my
+                                        internship — the data model and EF Core migrations, role-based authorization, and
+                                        the full set of modules: meetings, standups and tasks, attendance and the leave
+                                        accrual engine, objectives and KPIs, the real-time collaborative wiki, dashboards
+                                        with CSV export, and the notification/mention system. I implemented the
+                                        background job services and the email/WhatsApp/Google Meet integrations, and
+                                        delivered a responsive, polished UI across desktop and mobile — shipped as a real
+                                        internal tool the team uses to run daily work.</p>
+                                </div>
+
+                                <div class="pblock">
+                                    <h4>Links</h4>
+                                    <div class="plinks">
+                                        <a class="plink pad-slate" href="https://github.com/SahilSharma9024/TeamPulse"
+                                            target="_blank" rel="noopener">
+                                            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+                                                <path
+                                                    d="M12 .5C5.37.5 0 5.88 0 12.5c0 5.28 3.44 9.75 8.2 11.33.6.1.8-.26.8-.58v-2c-3.3.72-4-1.62-4-1.62-.55-1.38-1.33-1.76-1.33-1.76-1.1-.74.08-.73.08-.73 1.2.09 1.84 1.24 1.84 1.24 1.07 1.83 2.8 1.3 3.5 1 .1-.78.42-1.3.76-1.6-2.66-.3-5.47-1.33-5.47-5.93 0-1.3.47-2.38 1.24-3.22-.12-.3-.53-1.52.12-3.17 0 0 1-.32 3.3 1.23 1-.27 2-.4 3-.4s2 .13 3 .4c2.3-1.55 3.3-1.23 3.3-1.23.65 1.65.24 2.87.12 3.17.77.84 1.24 1.92 1.24 3.22 0 4.6-2.8 5.62-5.47 5.92.43.37.82 1.1.82 2.22v3.3c0 .33.2.7.82.58C20.56 22.25 24 17.78 24 12.5 24 5.88 18.63.5 12 .5z" />
+                                            </svg>
+                                            GitHub Repository
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+
                     <!-- Mood2Music -->
                     <article class="card project reveal" data-id="mood2music">
                         <button class="project-head" type="button" aria-expanded="false"
