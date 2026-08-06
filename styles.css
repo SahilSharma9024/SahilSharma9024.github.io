@@ -1223,6 +1223,43 @@ a {
     box-shadow: var(--shadow-sm);
 }
 
+/* Private repo: Hover/focus/tap swaps the label to "Private" */
+button.plink.is-private {
+    font: inherit;
+    font-size: .85rem;
+    font-weight: 700;
+    color: inherit;
+    cursor: help;
+}
+
+/* Label swap — both stacked in a fixed box so width doesn't jump. */
+.is-private .plink-swap {
+    position: relative;
+    display: inline-grid;
+}
+
+.is-private .plink-swap>span {
+    grid-area: 1 / 1;
+    transition: opacity .18s ease;
+}
+
+.is-private .plink-private {
+    opacity: 0;
+    color: var(--brand);
+}
+
+.is-private:hover .plink-label,
+.is-private:focus-visible .plink-label,
+.is-private.show-private .plink-label {
+    opacity: 0;
+}
+
+.is-private:hover .plink-private,
+.is-private:focus-visible .plink-private,
+.is-private.show-private .plink-private {
+    opacity: 1;
+}
+
 .tech-list {
     display: flex;
     flex-wrap: wrap;

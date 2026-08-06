@@ -499,6 +499,22 @@ const WELCOME_MS = 3600;   // how long the intro screen stays up
         });
     });
 
+    /* ---------- Private repo pills ---------- */
+    $$('.plink.is-private').forEach((pill) => {
+        pill.addEventListener('click', (e) => {
+            e.preventDefault();
+            const on = pill.classList.toggle('show-private');
+            if (on) {
+                const clear = (ev) => {
+                    if (pill.contains(ev.target)) return;
+                    pill.classList.remove('show-private');
+                    document.removeEventListener('click', clear, true);
+                };
+                document.addEventListener('click', clear, true);
+            }
+        });
+    });
+
     /* ---------- Quick jump panel ---------- */
     const panelToggle = $('#panelToggle');
     const sidePanel = $('#sidePanel');
