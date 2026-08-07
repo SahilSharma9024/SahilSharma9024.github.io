@@ -582,36 +582,68 @@
                             <div class="project-body-inner">
                                 <div class="pblock">
                                     <h4>Description</h4>
-                                    <p>An automation system that keeps social media audiences informed about the latest
-                                        developments in artificial intelligence. It monitors trending topics, writes
-                                        concise summaries of news articles, and shares them across Twitter, LinkedIn and
-                                        WhatsApp — without anyone touching a keyboard.</p>
+                                    <p>SnippetsAI is an end-to-end automation solution designed to keep social media
+                                        audiences updated with the latest developments in Artificial Intelligence.
+                                        Instead of manually searching for news, writing posts, and publishing them across
+                                        different platforms, the system performs the entire process automatically.</p>
+                                    <p>It continuously searches for trending AI news, generates short and engaging
+                                        summaries using Google's Gemini AI, and publishes the content on Twitter,
+                                        LinkedIn, and WhatsApp. This reduces manual effort while ensuring that followers
+                                        receive timely and informative updates.</p>
                                 </div>
 
                                 <div class="pblock">
                                     <h4>Highlights</h4>
                                     <ul>
-                                        <li><strong>Automated sourcing:</strong> finds the most relevant AI news links
-                                            for a given topic.</li>
-                                        <li><strong>AI summaries:</strong> turns long articles into short, engaging
-                                            snippets using the Google Gemini API.</li>
-                                        <li><strong>Multi-platform:</strong> posts to Twitter, LinkedIn and WhatsApp in
-                                            a single workflow.</li>
-                                        <li><strong>Smooth login:</strong> uses Chrome profiles to stay authenticated
-                                            and skip manual steps.</li>
-                                        <li><strong>Logging:</strong> writes every post to a local file for
-                                            record-keeping.</li>
+                                        <li><strong>Automated News Discovery:</strong> The system automatically searches
+                                            the internet for the latest and most relevant Artificial Intelligence news.
+                                            It uses Serper API and SerpAPI to identify trending topics and collect
+                                            high-quality news article links based on predefined keywords.</li>
+                                        <li><strong>AI-Powered News Summaries:</strong> Instead of sharing lengthy
+                                            articles, the system uses the Google Gemini API to generate concise,
+                                            easy-to-read summaries. Each summary is written in a clear and engaging style
+                                            that is suitable for social media platforms.</li>
+                                        <li><strong>Multi-Platform Posting:</strong> A single workflow publishes the
+                                            generated content across multiple social media platforms, including:
+                                            <ul>
+                                                <li>Twitter (X)</li>
+                                                <li>LinkedIn</li>
+                                                <li>WhatsApp Groups</li>
+                                            </ul>
+                                            This ensures consistent communication without requiring separate posting for
+                                            each platform.</li>
+                                        <li><strong>Automated Browser Login:</strong> The project uses Selenium with
+                                            existing Chrome user profiles. Since the browser profile is already logged
+                                            into the required social media accounts, the automation can post directly
+                                            without asking for usernames, passwords, or repeated authentication.</li>
+                                        <li><strong>Activity Logging:</strong> Every generated summary and published post
+                                            is saved locally in CSV, Markdown, or text files. These logs help maintain
+                                            records of previously shared content and make it easier to review or audit
+                                            the automation process.</li>
                                     </ul>
                                 </div>
 
                                 <div class="pblock">
                                     <h4>Workflow</h4>
                                     <ol>
-                                        <li>Search APIs find the latest URLs for trending AI news.</li>
-                                        <li>AI generates a short, catchy summary for each article.</li>
-                                        <li>Selenium opens a pre-logged-in Chrome instance.</li>
-                                        <li>The tool posts automatically to Twitter and LinkedIn feeds.</li>
-                                        <li>Snippets are sent to specific WhatsApp groups from a list.</li>
+                                        <li><strong>News Collection:</strong> The system searches for trending AI topics
+                                            using Serper API and SerpAPI. It gathers the latest article URLs from
+                                            reliable online sources.</li>
+                                        <li><strong>Content Generation:</strong> The collected article links are sent to
+                                            the Google Gemini API, which analyzes the content and creates short, engaging
+                                            summaries suitable for social media.</li>
+                                        <li><strong>Browser Automation:</strong> Selenium launches a Chrome browser using
+                                            a pre-authenticated user profile, allowing the automation to access social
+                                            media accounts without manual login.</li>
+                                        <li><strong>Social Media Publishing:</strong> The generated summaries are
+                                            automatically posted to Twitter (X) and LinkedIn with appropriate
+                                            formatting.</li>
+                                        <li><strong>WhatsApp Distribution:</strong> The same summaries are sent to
+                                            selected WhatsApp groups, enabling instant sharing with communities or
+                                            teams.</li>
+                                        <li><strong>Record Keeping:</strong> After successful posting, the system stores
+                                            details of every post in local CSV, Markdown, or text files for future
+                                            reference.</li>
                                     </ol>
                                 </div>
 
@@ -629,8 +661,20 @@
 
                                 <div class="pblock">
                                     <h4>My Role</h4>
-                                    <p>Built the complete pipeline — from news discovery and AI integration through to
-                                        browser automation and multi-platform posting.</p>
+                                    <p>I independently designed and developed the complete automation pipeline. My
+                                        responsibilities included:</p>
+                                    <ul>
+                                        <li>Integrating Serper API and SerpAPI for automated AI news discovery.</li>
+                                        <li>Connecting the Google Gemini API to generate high-quality news
+                                            summaries.</li>
+                                        <li>Building Selenium-based browser automation for Twitter (X), LinkedIn, and
+                                            WhatsApp.</li>
+                                        <li>Configuring Chrome profile management for seamless authenticated
+                                            sessions.</li>
+                                        <li>Implementing automated logging and record management.</li>
+                                        <li>Testing, debugging, and optimizing the complete workflow to ensure reliable
+                                            end-to-end automation.</li>
+                                    </ul>
                                 </div>
 
                                 <div class="pblock">
