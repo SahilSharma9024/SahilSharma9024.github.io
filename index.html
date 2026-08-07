@@ -863,6 +863,135 @@
                         </div>
                     </article>
 
+                    <!-- FeelTheBeat -->
+                    <article class="card project reveal" data-id="feelthebeat">
+                        <button class="project-head" type="button" aria-expanded="false"
+                            aria-controls="body-feelthebeat">
+                            <span class="project-id">
+                                <span class="pad pad-peach" aria-hidden="true">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                        stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M3 18v-6a9 9 0 0 1 18 0v6" />
+                                        <path
+                                            d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z" />
+                                    </svg>
+                                </span>
+                                <span class="project-name">
+                                    <span class="brand">FeelTheBeat</span>
+                                    <span class="subtitle">Personalised Music Playlist Builder</span>
+                                </span>
+                            </span>
+                            <span class="project-meta">
+                                <span class="tag pad-peach">MUSIC AI</span>
+                                <span class="arrow" aria-hidden="true">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                        <polyline points="6 9 12 15 18 9" />
+                                    </svg>
+                                </span>
+                            </span>
+                        </button>
+
+                        <div class="project-body" id="body-feelthebeat">
+                            <div class="project-body-inner">
+                                <div class="pblock">
+                                    <h4>Description</h4>
+                                    <p>FeelTheBeat is a Personalised Music Playlist Builder — a serverless music
+                                        assistant that curates your listening automatically. It tracks the songs you have
+                                        on repeat, saves them to your library, builds a fresh recommendation playlist
+                                        every week, and delivers an AI-written summary of your week in music to your phone
+                                        over WhatsApp — running entirely on a schedule, with no server and no manual
+                                        step.</p>
+                                    <p>The same codebase drives both Spotify and YouTube Music. Switching between them is
+                                        a one-line configuration change.</p>
+                                </div>
+
+                                <div class="pblock">
+                                    <h4>Highlights</h4>
+                                    <ul>
+                                        <li><strong>Platform-agnostic design:</strong> Spotify and YouTube Music are
+                                            interchangeable backends behind a shared five-function contract, so the core
+                                            logic is written once and the service can be swapped with a single config
+                                            value.</li>
+                                        <li><strong>Automatic library curation:</strong> detects "heavy rotation" tracks
+                                            using a rolling window over recent play history and saves them, skipping
+                                            anything already in the library so runs stay idempotent.</li>
+                                        <li><strong>Weekly discovery playlist:</strong> rebuilds a recommendation
+                                            playlist each week, seeded by what you are actually listening to now rather
+                                            than your all-time taste.</li>
+                                        <li><strong>AI-written summaries:</strong> Google Gemini turns raw listening data
+                                            into a personal weekly wrap-up, with a deterministic fallback so a message
+                                            always goes out even if the AI call fails.</li>
+                                        <li><strong>WhatsApp delivery:</strong> sends via Twilio, using approved Content
+                                            Templates to bypass WhatsApp's 24-hour messaging window and guarantee
+                                            unattended weekly delivery.</li>
+                                        <li><strong>Configuration-driven scheduling:</strong> run day, hour and timezone
+                                            live in the application config, not in CI YAML — retiming the bot requires no
+                                            infrastructure changes.</li>
+                                        <li><strong>Zero-cost deployment:</strong> runs on GitHub Actions cron with no
+                                            server, database or hosting bill.</li>
+                                    </ul>
+                                </div>
+
+                                <div class="pblock">
+                                    <h4>Workflow</h4>
+                                    <ol>
+                                        <li>GitHub Actions triggers the application hourly.</li>
+                                        <li>The app checks the configured day, hour and timezone and exits immediately if
+                                            no job is due.</li>
+                                        <li>The selected backend authenticates — OAuth for Spotify, browser-session
+                                            credentials for YouTube Music, both reconstructed from CI secrets at
+                                            runtime.</li>
+                                        <li>Recent listening history is fetched and play frequencies are counted across a
+                                            rolling window.</li>
+                                        <li>Tracks crossing the repeat threshold are filtered against the existing library
+                                            and the remainder are saved.</li>
+                                        <li>On the weekly run, those favourites seed the platform's recommendation engine
+                                            and the playlist is rebuilt from the results.</li>
+                                        <li>Gemini generates a personalised summary from the week's data.</li>
+                                        <li>Twilio delivers the summary and playlist link to WhatsApp.</li>
+                                    </ol>
+                                </div>
+
+                                <div class="pblock">
+                                    <h4>Tech Stack</h4>
+                                    <div class="tech-list">
+                                        <span class="chip">Python</span>
+                                        <span class="chip">Spotify API (Spotipy)</span>
+                                        <span class="chip">YouTube Music API (ytmusicapi)</span>
+                                        <span class="chip">Google Gemini API</span>
+                                        <span class="chip">Twilio WhatsApp Business API</span>
+                                        <span class="chip">GitHub Actions</span>
+                                        <span class="chip">cron</span>
+                                    </div>
+                                </div>
+
+                                <div class="pblock">
+                                    <h4>My Role</h4>
+                                    <p>Designed and built the entire system — the platform abstraction unifying two
+                                        separate API integrations, the auto-liking heuristic, the recommendation and
+                                        playlist pipeline, the Gemini summarisation layer, WhatsApp delivery through
+                                        Twilio, and the config-driven CI automation.</p>
+                                </div>
+
+                                <div class="pblock">
+                                    <h4>Links</h4>
+                                    <div class="plinks">
+                                        <a class="plink pad-slate" href="https://github.com/SahilSharma9024/FeelTheBeat"
+                                            target="_blank" rel="noopener">
+                                            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"
+                                                aria-hidden="true">
+                                                <path
+                                                    d="M12 .5C5.37.5 0 5.88 0 12.5c0 5.28 3.44 9.75 8.2 11.33.6.1.8-.26.8-.58v-2c-3.3.72-4-1.62-4-1.62-.55-1.38-1.33-1.76-1.33-1.76-1.1-.74.08-.73.08-.73 1.2.09 1.84 1.24 1.84 1.24 1.07 1.83 2.8 1.3 3.5 1 .1-.78.42-1.3.76-1.6-2.66-.3-5.47-1.33-5.47-5.93 0-1.3.47-2.38 1.24-3.22-.12-.3-.53-1.52.12-3.17 0 0 1-.32 3.3 1.23 1-.27 2-.4 3-.4s2 .13 3 .4c2.3-1.55 3.3-1.23 3.3-1.23.65 1.65.24 2.87.12 3.17.77.84 1.24 1.92 1.24 3.22 0 4.6-2.8 5.62-5.47 5.92.43.37.82 1.1.82 2.22v3.3c0 .33.2.7.82.58C20.56 22.25 24 17.78 24 12.5 24 5.88 18.63.5 12 .5z" />
+                                            </svg>
+                                            GitHub Repository
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+
                     <!-- Mood2Music -->
                     <article class="card project reveal" data-id="mood2music">
                         <button class="project-head" type="button" aria-expanded="false"
