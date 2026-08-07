@@ -19,7 +19,7 @@ const MAIL = {
     ENDPOINT: 'https://api.web3forms.com/submit',
 };
 
-const WELCOME_MS = 3600;   // how long the intro screen stays up
+const WELCOME_MS = 2200;   // how long the intro screen stays up
 
 (function () {
     'use strict';
@@ -407,11 +407,16 @@ const WELCOME_MS = 3600;   // how long the intro screen stays up
     /* ---------- Mobile menu (navbar burger) ---------- */
     const burger = $('#navBurger');
     const mobileMenu = $('#mobileMenu');
+    const navScrim = $('#navScrim');
 
     function setMobileMenu(open) {
         if (!burger || !mobileMenu) return;
         mobileMenu.classList.toggle('open', open);
         burger.classList.toggle('open', open);
+        if (navScrim) navScrim.classList.toggle('open', open);
+        // Freezes the page behind the drawer instead of letting it scroll
+        // under the blur.
+        root.classList.toggle('nav-open', open);
         burger.setAttribute('aria-expanded', String(open));
         burger.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
     }
@@ -460,17 +465,14 @@ const WELCOME_MS = 3600;   // how long the intro screen stays up
         items.forEach((el) => io.observe(el));
     }
 
-    /* ---------- Project accordion ---------- */
+    /* ---------- Project panels ---------- */
     $$('.project').forEach((project) => {
         const head = $('.project-head', project);
         const body = $('.project-body', project);
         if (!head || !body) return;
 
         function open() {
-            // Accordion: only one project expanded at a time.
-            $$('.project.open').forEach((other) => {
-                if (other !== project) collapse(other);
-            });
+            // Independent panels: any number of projects can stay expanded.
             project.classList.add('open');
             head.setAttribute('aria-expanded', 'true');
             body.style.maxHeight = body.scrollHeight + 'px';
@@ -493,6 +495,22 @@ const WELCOME_MS = 3600;   // how long the intro screen stays up
         window.addEventListener('resize', () => {
             if (project.classList.contains('open')) {
                 body.style.maxHeight = body.scrollHeight + 'px';
+            }
+        });
+    });
+
+    /* ---------- Private repo pills ---------- */
+    $$('.plink.is-private').forEach((pill) => {
+        pill.addEventListener('click', (e) => {
+            e.preventDefault();
+            const on = pill.classList.toggle('show-private');
+            if (on) {
+                const clear = (ev) => {
+                    if (pill.contains(ev.target)) return;
+                    pill.classList.remove('show-private');
+                    document.removeEventListener('click', clear, true);
+                };
+                document.addEventListener('click', clear, true);
             }
         });
     });
