@@ -19,7 +19,7 @@ const MAIL = {
     ENDPOINT: 'https://api.web3forms.com/submit',
 };
 
-const WELCOME_MS = 3600;   // how long the intro screen stays up
+const WELCOME_MS = 2200;   // how long the intro screen stays up
 
 (function () {
     'use strict';
