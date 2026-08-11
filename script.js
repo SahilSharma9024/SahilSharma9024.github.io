@@ -404,6 +404,71 @@ const WELCOME_MS = 2200;   // how long the intro screen stays up
         onScroll();
     }
 
+    /* ---------- Nav underline + scroll spy ---------- */
+    (function navUnderline() {
+        const nav = $('#topnav');
+        if (!nav) return;
+        const underline = $('.nav-underline', nav);
+        const links = $$('a', nav);
+        if (!underline || !links.length) return;
+
+        const sections = links
+            .map((a) => ({ link: a, el: document.getElementById(a.getAttribute('href').slice(1)) }))
+            .filter((s) => s.el);
+
+        let activeLink = links[0];
+
+        // offsetParent is null while #mainContent is hidden or on mobile
+        // (where .topnav is display:none), so placement is simply skipped then.
+        // The underline spans only the text, not the link's padding box.
+        function place(el) {
+            if (!el || nav.offsetParent === null) return;
+            const cs = getComputedStyle(el);
+            const padL = parseFloat(cs.paddingLeft) || 0;
+            const padR = parseFloat(cs.paddingRight) || 0;
+            underline.style.width = (el.offsetWidth - padL - padR) + 'px';
+            underline.style.transform = 'translateX(' + (el.offsetLeft + padL) + 'px)';
+            underline.classList.add('is-ready');
+        }
+
+        function setActive(link) {
+            activeLink = link;
+            links.forEach((l) => l.classList.toggle('is-active', l === link));
+            place(link);
+        }
+
+        // Hover previews a link; leaving the nav snaps back to the active one.
+        links.forEach((l) => l.addEventListener('mouseenter', () => place(l)));
+        nav.addEventListener('mouseleave', () => place(activeLink));
+
+        // Scroll spy: mark whichever section is currently in view.
+        function spy() {
+            const y = window.scrollY + window.innerHeight * 0.3;
+            let current = sections[0];
+            for (const s of sections) {
+                if (s.el.offsetTop <= y) current = s;
+            }
+            if (current && current.link !== activeLink) setActive(current.link);
+        }
+        window.addEventListener('scroll', spy, { passive: true });
+        window.addEventListener('resize', () => place(activeLink));
+
+        setActive(links[0]);
+
+        // The navbar lives inside the hidden welcome/main wrapper at load, so
+        // poll a few frames until it is on-screen, then draw the underline once.
+        let tries = 0;
+        (function ready() {
+            if (nav.offsetParent !== null) {
+                place(activeLink);
+                spy();
+                return;
+            }
+            if (tries++ > 240) return;
+            requestAnimationFrame(ready);
+        })();
+    })();
+
     /* ---------- Mobile menu (navbar burger) ---------- */
     const burger = $('#navBurger');
     const mobileMenu = $('#mobileMenu');

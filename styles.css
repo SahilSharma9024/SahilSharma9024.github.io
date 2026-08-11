@@ -44,6 +44,15 @@
     --shadow-lg: 0 1px 2px rgba(15, 23, 42, .05), 0 10px 24px -14px rgba(15, 23, 42, .22),
         0 40px 70px -50px rgba(15, 23, 42, .5);
     --shadow-hover: 0 2px 4px rgba(15, 23, 42, .04), 0 34px 60px -26px rgba(79, 70, 229, .45);
+
+    /* Floating nav glass + drifting aurora hues (frosted, never fully solid) */
+    --nav-glass: rgba(255, 255, 255, .50);
+    --nav-glass-strong: rgba(255, 255, 255, .64);
+    --nav-border: rgba(15, 23, 42, .14);
+    --aurora-1: rgba(124, 58, 237, .16);
+    --aurora-2: rgba(56, 189, 248, .14);
+    --aurora-3: rgba(219, 39, 119, .12);
+    --aurora-alpha: .8;
 }
 
 :root[data-theme="dark"] {
@@ -81,6 +90,15 @@
     --shadow-lg: 0 1px 2px rgba(0, 0, 0, .5), 0 10px 24px -14px rgba(0, 0, 0, .7),
         0 40px 70px -50px rgba(0, 0, 0, 1);
     --shadow-hover: 0 2px 4px rgba(0, 0, 0, .5), 0 34px 60px -26px rgba(167, 139, 250, .35);
+
+    /* Deeper glass + a touch louder aurora on the dark canvas */
+    --nav-glass: rgba(8, 10, 16, .34);
+    --nav-glass-strong: rgba(8, 10, 16, .52);
+    --nav-border: rgba(255, 255, 255, .20);
+    --aurora-1: rgba(129, 140, 248, .24);
+    --aurora-2: rgba(56, 189, 248, .16);
+    --aurora-3: rgba(244, 114, 182, .20);
+    --aurora-alpha: 1;
 }
 
 /* ---------- Base ----------------------------------------------------------- */
@@ -106,6 +124,30 @@ body {
     overflow-x: hidden;
     -webkit-font-smoothing: antialiased;
     transition: background .35s ease, color .35s ease;
+}
+
+/* ---------- Slim, near-invisible scrollbar --------------------------------- */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: var(--line-strong) transparent;
+}
+
+::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--line-strong);
+    border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--muted);
 }
 
 img {
@@ -200,6 +242,60 @@ a {
     z-index: 0;
 }
 
+/* ---------- Aurora backdrop ------------------------------------------------ */
+/* Fixed, behind all content (body's --bg propagates to the page canvas, so a
+   z-index:-1 layer sits above that fill but under .wrap). Theme-aware hues. */
+.aurora {
+    position: fixed;
+    inset: -12vmax;
+    z-index: -1;
+    overflow: hidden;
+    pointer-events: none;
+    opacity: var(--aurora-alpha);
+}
+
+.aurora__blob {
+    position: absolute;
+    width: 46vmax;
+    height: 46vmax;
+    border-radius: 50%;
+    filter: blur(90px);
+    will-change: transform;
+}
+
+.aurora .a1 {
+    top: -4vmax;
+    left: -2vmax;
+    background: radial-gradient(circle at 50% 50%, var(--aurora-1), transparent 68%);
+    animation: auroraA 26s ease-in-out infinite alternate;
+}
+
+.aurora .a2 {
+    top: 12vmax;
+    right: -6vmax;
+    background: radial-gradient(circle at 50% 50%, var(--aurora-2), transparent 68%);
+    animation: auroraB 32s ease-in-out infinite alternate;
+}
+
+.aurora .a3 {
+    bottom: -8vmax;
+    left: 32%;
+    background: radial-gradient(circle at 50% 50%, var(--aurora-3), transparent 68%);
+    animation: auroraC 30s ease-in-out infinite alternate;
+}
+
+@keyframes auroraA {
+    to { transform: translate3d(8vmax, 6vmax, 0) scale(1.15); }
+}
+
+@keyframes auroraB {
+    to { transform: translate3d(-10vmax, 4vmax, 0) scale(1.1); }
+}
+
+@keyframes auroraC {
+    to { transform: translate3d(6vmax, -8vmax, 0) scale(1.2); }
+}
+
 /* ---------- Layout --------------------------------------------------------- */
 
 .wrap {
@@ -238,87 +334,160 @@ a {
 
 /* ---------- Top bar -------------------------------------------------------- */
 
+/* ---------- Floating glass navbar ------------------------------------------ */
 .topbar {
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
     z-index: 60;
+    display: flex;
+    justify-content: center;
+    padding: 9px 20px 8px;
+    pointer-events: none;              /* only the pill itself is interactive */
+}
+
+/* Colour spread behind the bar (no glass/blur — just the page colour fading
+   down, like the reference). Hidden at the top; fades in on scroll so content
+   dissolves into the page colour as it approaches the bar. Theme-aware via --bg. */
+.topbar::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
     height: 68px;
+    z-index: -1;
+    pointer-events: none;
+    background: linear-gradient(180deg,
+            var(--bg) 0%,
+            var(--bg) 32%,
+            color-mix(in srgb, var(--bg) 48%, transparent) 66%,
+            transparent 100%);
+    opacity: 0;
+    transition: opacity .35s ease;
+}
+
+.topbar.scrolled::before {
+    opacity: 1;
+}
+
+.navbar {
+    pointer-events: auto;
     display: flex;
     align-items: center;
+    gap: 6px;
+    max-width: 100%;
+    padding: 7px 8px 7px 10px;
+    border-radius: 999px;
+    background: var(--nav-glass);
+    border: 1px solid var(--nav-border);
+    backdrop-filter: blur(14px) saturate(140%);
+    -webkit-backdrop-filter: blur(14px) saturate(140%);
+    box-shadow: var(--shadow-sm);
     transition: background .3s ease, box-shadow .3s ease, border-color .3s ease;
-    border-bottom: 1px solid transparent;
+    animation: navIn .6s cubic-bezier(.2, .8, .2, 1) both;
 }
 
-.topbar.scrolled {
-    background: var(--bg);
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
-    border-bottom-color: var(--line-strong);
-    box-shadow: 0 4px 20px -6px rgba(0, 0, 0, .18);
+/* On scroll the tint thickens a touch (still translucent glass, never solid)
+   so background stays visible-but-blurred, like the reference pill. */
+.topbar.scrolled .navbar {
+    background: var(--nav-glass-strong);
+    box-shadow: var(--shadow-lg);
 }
 
-.topbar__inner {
-    max-width: 1120px;
-    margin: 0 auto;
-    padding: 0 20px;
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 14px;
+@keyframes navIn {
+    from {
+        opacity: 0;
+        transform: translateY(-14px);
+    }
 }
 
-.mono-mark {
-    font-family: 'Space Grotesk', monospace;
-    font-weight: 700;
-    letter-spacing: -.02em;
-    font-size: 1.05rem;
-    text-decoration: none;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.mono-mark .dot-live {
-    width: 8px;
-    height: 8px;
+/* Circular monogram — a glowing blue "S" on a dark badge, matching the
+   reference logo. Fixed colours: identical in both light and dark themes. */
+.nav-logo {
+    width: 42px;
+    height: 42px;
+    flex: none;
     border-radius: 50%;
-    background: #22c55e;
-    box-shadow: 0 0 0 3px rgba(34, 197, 94, .18);
+    display: grid;
+    place-items: center;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 800;
+    font-size: 1.2rem;
+    line-height: 1;
+    color: #ffffff;
+    text-decoration: none;
+    background: radial-gradient(circle at 50% 40%, #5c98ff 0%, #3b74e8 45%, #14285a 100%);
+    border: 1px solid rgba(150, 190, 255, .45);
+    box-shadow: 0 6px 20px -6px rgba(74, 134, 255, .75), inset 0 1px 0 rgba(255, 255, 255, .22);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, .28);
+    transition: transform .28s cubic-bezier(.2, .8, .2, 1), box-shadow .28s ease;
 }
 
+.nav-logo:hover {
+    transform: scale(1.06) rotate(-3deg);
+    box-shadow: 0 12px 26px -8px rgba(74, 134, 255, .7), inset 0 1px 0 rgba(255, 255, 255, .06);
+}
+
+/* Nav links + a single underline that slides to the hovered / active link */
 .topnav {
+    position: relative;
     display: flex;
+    align-items: center;
     gap: 2px;
+    padding: 0 4px;
 }
 
 .topnav a {
-    padding: 8px 12px;
-    border-radius: 9px;
+    position: relative;
+    height: 38px;
+    padding: 0 14px;
+    display: inline-flex;
+    align-items: center;
+    border-radius: 999px;
     text-decoration: none;
     color: var(--muted);
-    font-size: .88rem;
-    font-weight: 500;
+    font-size: .9rem;
+    font-weight: 600;
+    white-space: nowrap;
     transition: color .2s ease, background .2s ease;
 }
 
 .topnav a:hover {
     color: var(--text);
-    background: color-mix(in srgb, var(--text) 7%, transparent);
+    background: color-mix(in srgb, var(--text) 8%, transparent);
 }
 
-.topbar__actions {
-    display: flex;
-    align-items: center;
-    gap: 10px;
+.topnav a.is-active {
+    color: var(--text);
 }
 
-/* Theme toggle */
+.nav-underline {
+    position: absolute;
+    left: 0;
+    bottom: 5px;
+    width: 0;
+    height: 2px;
+    border-radius: 2px;
+    background: var(--brand);
+    box-shadow: 0 0 8px -1px var(--brand);
+    opacity: 0;
+    pointer-events: none;
+    transition: transform .32s cubic-bezier(.2, .8, .2, 1),
+        width .32s cubic-bezier(.2, .8, .2, 1),
+        opacity .3s ease;
+}
+
+.nav-underline.is-ready {
+    opacity: 1;
+}
+
+/* Theme toggle — occupies the slot the reference site used for its language flip */
 .theme-toggle {
-    width: 42px;
-    height: 42px;
+    width: 40px;
+    height: 40px;
+    flex: none;
     border-radius: 12px;
     border: 1px solid var(--line-strong);
     background: var(--surface);
@@ -1524,10 +1693,6 @@ button.plink.is-private {
     .side-panel {
         display: none;
     }
-
-    #resumeBtn {
-        display: none;
-    }
 }
 
 @media (max-width: 720px) {
@@ -1768,8 +1933,7 @@ button.plink.is-private {
 @media (max-width: 720px) {
 
     /* Tighter gutters so cards read as full-bleed on a phone. */
-    .wrap,
-    .topbar__inner {
+    .wrap {
         padding-left: 14px;
         padding-right: 14px;
     }

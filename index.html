@@ -32,6 +32,13 @@
 
 <body>
 
+    <!-- Slow-drifting aurora glow behind everything. Theme-aware, decorative. -->
+    <div class="aurora" aria-hidden="true">
+        <span class="aurora__blob a1"></span>
+        <span class="aurora__blob a2"></span>
+        <span class="aurora__blob a3"></span>
+    </div>
+
     <!-- ================= WELCOME ================= -->
     <div id="welcomeScreen" class="welcome-screen">
         <div class="bloom" style="width:34rem;height:34rem;top:-8rem;left:-8rem;background:rgba(124,58,237,.22)"></div>
@@ -53,49 +60,39 @@
     <!-- ================= MAIN ================= -->
     <div id="mainContent" class="main-content" hidden>
 
-        <!-- ---------- Top bar ---------- -->
+        <!-- ---------- Top bar (floating glass pill) ---------- -->
         <header class="topbar" id="topbar">
-            <div class="topbar__inner">
-                <a href="#top" class="mono-mark">
-                    <span class="dot-live" aria-hidden="true"></span> SAHIL SHARMA
-                </a>
+            <nav class="navbar" aria-label="Primary">
+                <a href="#top" class="nav-logo" aria-label="Home — Sahil Sharma">S</a>
 
-                <nav class="topnav">
+                <div class="topnav" id="topnav">
+                    <span class="nav-underline" aria-hidden="true"></span>
                     <a href="#about">About</a>
                     <a href="#experience">Experience</a>
                     <a href="#skills">Skills</a>
                     <a href="#education">Education</a>
                     <a href="#projects">Projects</a>
                     <a href="#connect">Connect</a>
-                </nav>
-
-                <div class="topbar__actions">
-                    <a class="btn btn-primary" id="resumeBtn" href="resume.pdf" target="_blank" rel="noopener">
-                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                            stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-                            <polyline points="14 2 14 8 20 8" />
-                        </svg>
-                        Resume
-                    </a>
-                    <button class="theme-toggle" id="themeToggle" aria-label="Toggle colour theme" title="Toggle theme">
-                        <svg class="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                            stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
-                        </svg>
-                        <svg class="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                            stroke-linecap="round" stroke-linejoin="round">
-                            <circle cx="12" cy="12" r="4" />
-                            <path
-                                d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41" />
-                        </svg>
-                    </button>
-                    <button class="nav-burger" id="navBurger" aria-label="Open menu" aria-expanded="false"
-                        aria-controls="mobileMenu">
-                        <span class="lines"><span></span><span></span><span></span></span>
-                    </button>
                 </div>
-            </div>
+
+                <button class="theme-toggle" id="themeToggle" aria-label="Toggle colour theme" title="Toggle theme">
+                    <svg class="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+                    </svg>
+                    <svg class="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="4" />
+                        <path
+                            d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41" />
+                    </svg>
+                </button>
+
+                <button class="nav-burger" id="navBurger" aria-label="Open menu" aria-expanded="false"
+                    aria-controls="mobileMenu">
+                    <span class="lines"><span></span><span></span><span></span></span>
+                </button>
+            </nav>
         </header>
 
         <nav class="mobile-menu" id="mobileMenu" aria-label="Mobile navigation">
