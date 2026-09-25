@@ -1,0 +1,6 @@
+# Build output. GitHub Actions rebuilds it on every push, so it never needs
+# committing; delete it locally whenever you like.
+dist/
+
+__pycache__/
+*.pyc
