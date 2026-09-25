@@ -11,8 +11,10 @@
     --surface: #ffffff;
     --surface-2: #f4f6fb;
     --text: #0b1020;
-    --text-2: #313a56;
-    --muted: #5a6480;
+    /* Body copy and the secondary text under it. Both sit a step darker than a
+       typical slate so descriptions read solidly rather than greyed out. */
+    --text-2: #212a42;
+    --muted: #3b4459;
     --line: rgba(15, 23, 42, .1);
     --line-strong: rgba(15, 23, 42, .18);
 
@@ -36,6 +38,14 @@
     --snake-a: #4f46e5;
     --snake-b: #db2777;
     --snake-thickness: 2px;
+
+    /* Tag pills on project cards, matching the company site. */
+    --pill-line: rgba(79, 70, 229, .3);
+
+    /* Ring on the front card of the deck. Neutral rather than coloured, so it
+       frames the card instead of reading as a status. */
+    --ring: rgba(11, 16, 32, .8);
+    --ring-shadow: rgba(15, 23, 42, .4);
 
     --grid-line: rgba(15, 23, 42, .055);
     --dot: rgba(15, 23, 42, .13);
@@ -74,6 +84,11 @@
     --snake-a: #a78bfa;
     --snake-b: #f472b6;
 
+    --pill-line: rgba(129, 140, 248, .32);
+
+    --ring: rgba(255, 255, 255, .82);
+    --ring-shadow: rgba(0, 0, 0, .75);
+
     --grid-line: rgba(255, 255, 255, .05);
     --dot: rgba(255, 255, 255, .1);
 
@@ -81,6 +96,79 @@
     --shadow-lg: 0 1px 2px rgba(0, 0, 0, .5), 0 10px 24px -14px rgba(0, 0, 0, .7),
         0 40px 70px -50px rgba(0, 0, 0, 1);
     --shadow-hover: 0 2px 4px rgba(0, 0, 0, .5), 0 34px 60px -26px rgba(167, 139, 250, .35);
+}
+
+html.no-lenis {
+    scroll-behavior: smooth;
+}
+
+/* ---------- Lenis ----------------------------------------------------------
+   Lenis sets these classes on <html> itself; these are the rules it expects
+   the page to supply. Without them the page keeps its own scroll height and
+   the two fight each other. */
+
+html.lenis,
+html.lenis body {
+    height: auto;
+}
+
+.lenis.lenis-smooth {
+    scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+    overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+    overflow: hidden;
+}
+
+.lenis.lenis-smooth iframe {
+    pointer-events: none;
+}
+
+/* The soft blobs are large, heavily blurred and never move outside the intro
+   screen. Giving them their own layer means the blur is rasterised once
+   instead of being repainted as the page scrolls past. */
+.bloom {
+    will-change: transform;
+}
+
+/* ---------- Scrollbar ------------------------------------------------------
+
+   A 2px rail instead of the OS default. Two deliberate choices, both learned
+   the hard way: the track keeps an opaque colour rather than `transparent`,
+   and `scrollbar-width` is not set on `*`. Either of those made scrolling
+   stutter, because the browser ends up recomputing the gutter as the page
+   moves. Colours only on the wildcard; geometry only on the root scroller. */
+
+::-webkit-scrollbar {
+    width: 2px;
+    height: 2px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--surface-2);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--line-strong);
+    border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--muted);
+}
+
+::-webkit-scrollbar-corner {
+    background: var(--surface-2);
+}
+
+/* Firefox has no pseudo-elements for this; `thin` is the narrowest it offers. */
+html {
+    scrollbar-width: thin;
+    scrollbar-color: var(--line-strong) var(--surface-2);
 }
 
 /* ---------- Base ----------------------------------------------------------- */
@@ -92,8 +180,11 @@
 }
 
 html {
-    scroll-behavior: smooth;
-    scroll-padding-top: 6rem;
+    /* Left to the browser. Lenis drives scrolling when it loads, and a CSS
+       smooth-scroll on top of it produces two animations racing each other;
+       script.js re-enables this only if Lenis was skipped. */
+    scroll-behavior: auto;
+    scroll-padding-top: 5.5rem;
     overflow-x: clip;
 }
 
@@ -103,7 +194,10 @@ body {
     color: var(--text);
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
     line-height: 1.6;
-    overflow-x: hidden;
+    /* `clip`, not `hidden`: `hidden` on one axis forces the other to `auto`,
+       which turns body into a scroll container and leaves Lenis driving the
+       window while the body scrolls separately. */
+    overflow-x: clip;
     -webkit-font-smoothing: antialiased;
     transition: background .35s ease, color .35s ease;
 }
@@ -244,7 +338,7 @@ a {
     left: 0;
     right: 0;
     z-index: 60;
-    height: 68px;
+    height: 60px;
     display: flex;
     align-items: center;
     transition: background .3s ease, box-shadow .3s ease, border-color .3s ease;
@@ -252,9 +346,11 @@ a {
 }
 
 .topbar.scrolled {
+    /* No backdrop-filter. The bar is fixed, and a fixed element that filters
+       its backdrop forces the compositor to re-blur the page behind it on
+       every scrolled frame. The background is opaque anyway, so the blur was
+       never visible - only expensive. */
     background: var(--bg);
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
     border-bottom-color: var(--line-strong);
     box-shadow: 0 4px 20px -6px rgba(0, 0, 0, .18);
 }
@@ -420,7 +516,7 @@ a {
     background: var(--bg);
     border-left: 1px solid var(--line-strong);
     box-shadow: -16px 0 36px -14px rgba(0, 0, 0, .35);
-    /* Top padding clears the 68px navbar. */
+    /* Top padding clears the 60px navbar. */
     padding: 84px 18px 24px;
     display: grid;
     align-content: start;
@@ -532,30 +628,58 @@ a {
     padding: 26px;
     z-index: 0;
     box-shadow: var(--shadow-sm);
-    /* Clips the oversized rotating lining to the card's rounded box. */
+    /* Keeps cover art and long content inside the rounded box. */
     overflow: hidden;
     transition: transform .38s cubic-bezier(.2, .8, .2, 1), box-shadow .38s ease;
 }
 
 /* Layer 1 — the travelling conic-gradient lining.
-   Sized in vmax so the sweep stays circular whatever the card's aspect ratio. */
+   
+   This used to be a 100vmax square (~1440px on a laptop) rotated by transform,
+   one per card. With 28 cards on the page that is 28 full-viewport layers being
+   composited continuously, on screen and off, which is enough to cost frames
+   during a scroll.
+   
+   Now the element is card-sized and only the gradient's start angle animates,
+   so the painted area drops by roughly two orders of magnitude per card. The
+   angle is a registered custom property (@property below) because an unregistered
+   one cannot be interpolated. Browsers without @property keep a static ring;
+   `snake-modern` is set from script.js only where the feature exists. */
 .card::before {
     content: "";
     position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 100vmax;
-    height: 100vmax;
-    transform: translate(-50%, -50%);
+    inset: 0;
+    border-radius: inherit;
     background: conic-gradient(from 180deg,
             transparent 0deg,
             var(--snake-a) 90deg,
             transparent 180deg,
             var(--snake-b) 270deg,
             transparent 360deg);
-    animation: spinSnake 14s linear infinite;
     z-index: -2;
-    border-radius: 50%;
+}
+
+@property --snake-angle {
+    syntax: "<angle>";
+    initial-value: 180deg;
+    inherits: false;
+}
+
+.snake-modern .card::before {
+    background: conic-gradient(from var(--snake-angle),
+            transparent 0deg,
+            var(--snake-a) 90deg,
+            transparent 180deg,
+            var(--snake-b) 270deg,
+            transparent 360deg);
+    animation: spinSnake 14s linear infinite;
+    /* Held until the card is actually on screen; the reveal observer in
+       script.js flips `is-live`. A card nobody can see costs nothing. */
+    animation-play-state: paused;
+}
+
+.snake-modern .card.is-live::before {
+    animation-play-state: running;
 }
 
 /* Layer 2 — mask that leaves only a thin ring of the lining visible. */
@@ -571,7 +695,7 @@ a {
 
 @keyframes spinSnake {
     to {
-        transform: translate(-50%, -50%) rotate(360deg);
+        --snake-angle: 540deg;
     }
 }
 
@@ -1066,136 +1190,501 @@ a {
 
 /* ---------- Projects ------------------------------------------------------- */
 
-.projects {
+.project-grid {
     display: grid;
-    gap: 16px;
+    grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+    gap: 26px;
+    /* Cards lift on hover; without the gutter the section clips the top edge. */
+    padding-top: 6px;
 }
 
-.project {
+.project-card {
+    display: flex;
+    flex-direction: column;
     padding: 0;
     overflow: hidden;
 }
 
-.project-head {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 14px;
-    padding: 22px 24px;
-    background: none;
-    border: none;
-    cursor: pointer;
-    text-align: left;
-    font-family: inherit;
-    color: inherit;
+.project-card:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-hover);
 }
 
-.project-id {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    min-width: 0;
+/* ---- cover ---- */
+
+/* Fixed ratio and no flexing: in a grid the summaries differ in length, and
+   without this the covers would stretch to whatever height the card became. */
+.pcover-wrap {
+    position: relative;
+    flex: none;
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+    background: #070b18;
 }
 
-.project-name {
-    min-width: 0;
-}
-
-.project-name .brand {
-    font-family: 'Space Grotesk', sans-serif;
-    font-weight: 700;
-    font-size: 1.15rem;
+.pcover {
     display: block;
+    width: 100%;
+    height: 100%;
+    transition: transform .7s cubic-bezier(.2, .8, .2, 1);
 }
 
-.project-name .subtitle {
-    color: var(--muted);
-    font-size: .86rem;
+.project-card:hover .pcover {
+    transform: scale(1.04);
 }
 
-.project-meta {
+/* A single bright hairline along the top edge is what makes the panel read as
+   glass rather than as a flat picture. */
+.pcover-sheen {
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .35), transparent);
+    z-index: 3;
+}
+
+.pcover-badges {
+    position: absolute;
+    inset: 0 0 auto 0;
+    z-index: 4;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 11px;
+}
+
+.pbadge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 7px;
+    border-radius: 999px;
+    font-size: .6rem;
+    font-weight: 700;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    backdrop-filter: blur(7px);
+}
+
+.pbadge svg {
+    width: 9px;
+    height: 9px;
+}
+
+/* The cover art is always dark, so these keep fixed colours in both themes. */
+.pbadge-cat {
+    background: rgba(8, 12, 24, .42);
+    border: 1px solid rgba(255, 255, 255, .16);
+    color: #eef2fb;
+}
+
+.pbadge-live {
+    background: rgba(6, 40, 30, .42);
+    border: 1px solid rgba(52, 211, 153, .32);
+    color: #9df0cd;
+}
+
+.pbadge-featured {
+    background: rgba(48, 32, 4, .45);
+    border: 1px solid rgba(251, 191, 36, .34);
+    color: #fde199;
+}
+
+/* ---- body ---- */
+
+.project-card-body {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    padding: 18px;
+}
+
+.project-card-head {
     display: flex;
     align-items: center;
     gap: 12px;
+}
+
+.project-card-head .pad {
     flex: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
 }
 
-.tag {
-    font-size: .68rem;
-    font-weight: 800;
-    letter-spacing: .1em;
-    padding: 5px 10px;
-    border-radius: 8px;
-    border: 1px solid var(--pad-line);
+.project-card-head .pad svg {
+    width: 19px;
+    height: 19px;
+}
+
+.project-name {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+}
+
+.project-name .brand {
+    font-family: 'Space Grotesk', system-ui, sans-serif;
+    font-size: 1.06rem;
+    font-weight: 700;
+    letter-spacing: -.01em;
+    color: var(--text);
+}
+
+/* One line, always. A subtitle that wraps makes that card taller than the
+   rest, and since the footer is pinned to the bottom the difference shows up
+   as dead space on every other card. Ellipsis rather than wrap. */
+.project-name .subtitle {
+    overflow: hidden;
+    font-size: .76rem;
+    text-overflow: ellipsis;
     white-space: nowrap;
+    color: var(--muted);
 }
 
-.arrow {
+/* Smaller and tighter than the body copy elsewhere: six of these sit side by
+   side, and the card height is set by this block.
+
+   The summaries are written to within a dozen characters of each other, so at
+   any given card width they all wrap to the same number of lines and no
+   min-height is needed - a reserved height would only show up as a gap on the
+   wider grid, where they wrap to fewer lines. The clamp is a backstop against
+   a later edit, set to four rather than three so nothing in the current copy
+   is cut off mid-sentence. */
+.project-card-sum {
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    margin: 11px 0 0;
+    font-size: .79rem;
+    line-height: 1.55;
+    color: var(--text-2);
+}
+
+.project-card-tags {
+    margin-top: 15px;
+}
+
+/* Same treatment as the company site: an indigo-tinted capsule rather than a
+   grey one, so the tags read as metadata and not as another button. */
+/* One row, always, for the same reason. `nowrap` plus shrinkable pills means
+   a long set ellipsises the longest label instead of spilling onto a second
+   row - the row height is then fixed no matter what the labels say. */
+.project-card-tags {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 6px;
+    margin: 15px 0 0;
+    padding: 0;
+    list-style: none;
+}
+
+.project-card-tags .pill {
+    display: inline-flex;
+    min-width: 0;
+    align-items: center;
+    overflow: hidden;
+    gap: .35rem;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    padding: .2rem .55rem;
+    border: 1px solid var(--pill-line);
+    border-radius: 999px;
+    background: var(--brand-soft);
+    font-size: .625rem;
+    font-weight: 600;
+    color: var(--brand);
+}
+
+.project-card-foot {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 14px;
+    margin-top: auto;
+    padding-top: 16px;
+    border-top: 1px solid var(--line);
+}
+
+.project-card-meta {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.project-card-meta strong {
+    overflow: hidden;
+    font-size: .78rem;
+    font-weight: 700;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: var(--text);
+}
+
+.project-card-meta em {
+    font-size: .68rem;
+    font-style: normal;
+    color: var(--muted);
+}
+
+
+.project-open svg {
+    width: 13px;
+    height: 13px;
+    transition: transform .25s ease;
+}
+
+.project-card:hover .project-open svg {
+    transform: translateX(2px);
+}
+
+/* Stretched hit area: the whole card is clickable, while the title link stays
+   the thing screen readers and the keyboard actually land on. */
+.project-card-hit {
+    position: absolute;
+    inset: 0;
+    z-index: 5;
+}
+
+.project-name .brand a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.project-open {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    gap: 6px;
+    font-size: .8rem;
+    font-weight: 700;
+    color: var(--brand);
+}
+
+.project-card:focus-within {
+    border-color: var(--line-strong);
+}
+
+/* ---- project detail page ---- */
+
+.crumbs {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 26px;
+    font-size: .8rem;
+    color: var(--muted);
+}
+
+.crumbs a {
+    color: var(--muted);
+    text-decoration: none;
+}
+
+.crumbs a:hover {
+    color: var(--brand);
+}
+
+.crumbs span[aria-current] {
+    color: var(--text);
+    font-weight: 600;
+}
+
+.project-hero {
+    display: flex;
+    align-items: flex-start;
+    gap: 18px;
+    margin-bottom: 26px;
+}
+
+.project-hero .pad {
+    flex: none;
+    width: 56px;
+    height: 56px;
+    border-radius: 16px;
+}
+
+.project-hero .pad svg {
+    width: 26px;
+    height: 26px;
+}
+
+.project-hero h1 {
+    margin: 6px 0 0;
+    font-size: clamp(1.9rem, 4vw, 2.7rem);
+    letter-spacing: -.03em;
+}
+
+.project-hero-sub {
+    margin: 6px 0 0;
+    font-size: 1rem;
+    color: var(--muted);
+}
+
+.project-hero .project-card-tags {
+    margin-top: 14px;
+}
+
+/* The cover art again, at full width: on a detail page it is the one image,
+   so it earns the room. */
+.media-shot {
+    padding: 0;
+    overflow: hidden;
+    margin-bottom: 26px;
+}
+
+/* No fixed ratio here, unlike the cards. The SVG carries its own 800x500
+   ratio, so letting it size itself means the box is always exactly the shape
+   of the artwork and there is nothing to crop. Paired with fit="meet" on this
+   page's copy of the SVG, the whole scene is guaranteed to show. */
+.media-shot .pcover-wrap {
+    aspect-ratio: auto;
+}
+
+.media-shot .pcover {
+    height: auto;
+}
+
+.project-detail {
+    padding: 30px;
+}
+
+.project-detail .psheet-sec:first-of-type {
+    margin-top: 28px;
+}
+
+.project-pager {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: 30px;
+}
+
+.psheet-lead {
+    margin: 0;
+    font-size: .93rem;
+    line-height: 1.72;
+    color: var(--text-2);
+}
+
+.psheet-sec {
+    margin-top: 26px;
+}
+
+.psheet-sec h4 {
+    margin: 0 0 13px;
+    font-size: .72rem;
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--muted);
+}
+
+/* Feature rows: icon and title on one line, one short line underneath. The old
+   layout gave each of these a full card and the section ran for screens. */
+.pfeats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+    gap: 10px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.pfeat {
+    display: flex;
+    gap: 11px;
+    padding: 12px 13px;
+    border: 1px solid var(--line);
+    border-radius: 13px;
+    background: var(--surface-2);
+}
+
+.pfeat .pad {
+    flex: none;
     width: 30px;
     height: 30px;
     border-radius: 9px;
-    display: grid;
-    place-items: center;
-    border: 1px solid var(--line-strong);
-    transition: transform .35s cubic-bezier(.2, .8, .2, 1), background .25s ease;
+}
+
+.pfeat .pad svg {
+    width: 15px;
+    height: 15px;
+}
+
+.pfeat-text {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.pfeat-text strong {
+    font-size: .84rem;
+    font-weight: 700;
+    color: var(--text);
+}
+
+.pfeat-text em {
+    font-size: .78rem;
+    font-style: normal;
+    line-height: 1.5;
+    color: var(--muted);
+}
+
+.psteps {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    counter-reset: none;
+}
+
+.psteps li {
+    display: flex;
+    gap: 12px;
+    padding: 9px 0;
+    font-size: .855rem;
+    line-height: 1.6;
+    color: var(--text-2);
+    border-bottom: 1px solid var(--line);
+}
+
+.psteps li:last-child {
+    border-bottom: 0;
+}
+
+.pstep-n {
+    display: inline-flex;
     flex: none;
-}
-
-.project.open .arrow {
-    transform: rotate(180deg);
+    width: 22px;
+    height: 22px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 7px;
     background: var(--brand-soft);
-}
-
-.project-body {
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height .45s cubic-bezier(.2, .8, .2, 1);
-}
-
-.project-body-inner {
-    padding: 0 24px 24px;
-    border-top: 1px solid var(--line);
-    margin-top: 2px;
-    padding-top: 20px;
-}
-
-.pblock {
-    margin-top: 18px;
-}
-
-.pblock:first-child {
-    margin-top: 0;
-}
-
-.pblock h4 {
-    margin: 0 0 8px;
-    font-size: .74rem;
-    letter-spacing: .16em;
-    text-transform: uppercase;
+    font-family: ui-monospace, monospace;
+    font-size: .7rem;
+    font-weight: 700;
     color: var(--brand);
-    font-family: 'Space Grotesk', monospace;
 }
 
-.pblock p {
+.psheet-split {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 26px;
+}
+
+.psheet-role {
     margin: 0;
-    color: var(--muted);
-    font-size: .93rem;
-}
-
-.pblock ul,
-.pblock ol {
-    margin: 0;
-    padding-left: 20px;
-    color: var(--muted);
-    font-size: .93rem;
-}
-
-.pblock li {
-    margin-bottom: 6px;
-}
-
-.pblock li strong {
+    font-size: .855rem;
+    line-height: 1.66;
     color: var(--text-2);
 }
 
@@ -1208,37 +1697,60 @@ a {
 .plink {
     display: inline-flex;
     align-items: center;
-    gap: 7px;
-    padding: 9px 14px;
-    border-radius: 10px;
+    gap: 9px;
+    padding: 10px 15px;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: var(--surface-2);
+    font: inherit;
+    font-size: .82rem;
+    font-weight: 600;
+    color: var(--text);
     text-decoration: none;
-    font-size: .85rem;
-    font-weight: 700;
-    border: 1.5px solid var(--pad-line);
-    transition: transform .2s ease, box-shadow .2s ease;
+    cursor: pointer;
+    transition: border-color .2s ease, transform .2s ease;
 }
 
 .plink:hover {
+    border-color: var(--line-strong);
     transform: translateY(-2px);
-    box-shadow: var(--shadow-sm);
 }
 
-/* Private repo: Hover/focus/tap swaps the label to "Private" */
+.plink svg {
+    width: 16px;
+    height: 16px;
+    flex: none;
+}
+
+.plink span {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.3;
+}
+
+.plink em {
+    font-size: .68rem;
+    font-style: normal;
+    font-weight: 500;
+    color: var(--muted);
+}
+
+/* Private repo: hover, focus or tap swaps the label to "Private". */
 button.plink.is-private {
     font: inherit;
-    font-size: .85rem;
-    font-weight: 700;
-    color: inherit;
+    font-size: .82rem;
+    font-weight: 600;
+    color: var(--muted);
     cursor: help;
 }
 
-/* Label swap — both stacked in a fixed box so width doesn't jump. */
+/* Both labels share one grid cell so the pill keeps its width as they swap. */
 .is-private .plink-swap {
     position: relative;
     display: inline-grid;
 }
 
-.is-private .plink-swap>span {
+.is-private .plink-swap > span {
     grid-area: 1 / 1;
     transition: opacity .18s ease;
 }
@@ -1261,9 +1773,203 @@ button.plink.is-private {
 }
 
 .tech-list {
+
     display: flex;
     flex-wrap: wrap;
     gap: 7px;
+}
+
+
+/* ---------- Project deck --------------------------------------------------- */
+
+/* A fan of cards with one in front, advancing on its own. Ported from the
+   company site: the cards are absolutely positioned and placed by a ring index
+   the script sets, so only transform and opacity ever animate. */
+
+.deck-wrap {
+    position: relative;
+}
+
+.deck {
+    --deck-card: 17rem;
+    /* Fallback only, and deliberately generous. The real height is measured
+       from the tallest card by initDecks() and written onto this element,
+       because the subtitles and tag rows wrap differently per card and again
+       at each width - any figure fixed here is either too short for one card
+       or too tall for the rest. This value is known to clear the tallest
+       card, so if the script never runs the worst case is a little slack
+       rather than clipped text. */
+    --deck-h: 30rem;
+
+    /* offsets from centre, and scale, for rings 1..3 */
+    --s1: 0.9;
+    --s2: 0.82;
+    --s3: 0.74;
+    --x1: 85%;
+    --x2: 161%;
+    /* Ring 3 continues the same arc rather than veering off, so a card leaving
+       looks like it is still on the belt when it fades. */
+    --x3: 232%;
+    --blur1: 0.35px;
+    --blur2: 0.7px;
+
+    position: relative;
+    height: var(--deck-h);
+    /* Vertical panning stays with the browser; horizontal gestures reach the
+       swipe handler instead of being swallowed as a scroll. */
+    touch-action: pan-y;
+}
+
+@media (min-width: 640px) {
+    .deck {
+        --deck-card: 18rem;
+        --deck-h: 31rem;
+    }
+}
+
+/* A phone cannot show a wide fan, so it closes up and leans on the arrows. */
+@media (max-width: 767px) {
+    .deck {
+        --s1: 0.86;
+        --s2: 0.76;
+        --s3: 0.7;
+        --x1: 58%;
+        --x2: 104%;
+        --x3: 148%;
+    }
+}
+
+.deck-item {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: var(--deck-card);
+    height: 100%;
+    margin-left: calc(var(--deck-card) / -2);
+    /* Long and soft: the fan is the page's one piece of motion, so it should
+       glide rather than snap. Only transform and opacity move, both of which
+       the compositor can handle without repainting the card. */
+    transition:
+        transform 1.05s cubic-bezier(.22, .61, .28, 1),
+        opacity 1.05s cubic-bezier(.33, 0, .2, 1);
+}
+
+.deck-item .project-card {
+    height: 100%;
+}
+
+/* The cards behind carry a light defocus so the front one reads as the subject.
+   The filter is deliberately left out of the transition: animating it would
+   re-blur every frame of every move. */
+.deck-item[data-ring="0"] {
+    transform: translate3d(0, -.9rem, 0) scale(1);
+    z-index: 30;
+    opacity: 1;
+}
+
+.deck-item[data-ring="1"] {
+    transform: translate3d(calc(var(--side) * var(--x1)), .55rem, 0) scale(var(--s1));
+    z-index: 20;
+    opacity: 1;
+    filter: blur(var(--blur1));
+}
+
+.deck-item[data-ring="2"] {
+    transform: translate3d(calc(var(--side) * var(--x2)), 1.1rem, 0) scale(var(--s2));
+    z-index: 10;
+    opacity: 1;
+    filter: blur(var(--blur2));
+}
+
+/* Out of the fan: further out and smaller than ring 2, so leaving reads as
+   travelling away rather than vanishing on the spot. */
+.deck-item[data-ring="3"] {
+    transform: translate3d(calc(var(--side) * var(--x3)), 1.65rem, 0) scale(var(--s3));
+    z-index: 0;
+    opacity: 0;
+    filter: blur(var(--blur2));
+    pointer-events: none;
+}
+
+/* The front card is already ringed, so the travelling lining underneath is
+   noise competing with it - switch the lining off while a card is in front. */
+.deck-item[data-ring="0"] .project-card::before {
+    animation: none;
+    background: none;
+}
+
+.deck-item[data-ring="0"] .project-card {
+    border-color: var(--ring);
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+    box-shadow: 0 30px 60px -32px var(--ring-shadow);
+}
+
+/* The fan already lifts the front card; a hover lift on top of that fights the
+   transform the deck is driving. */
+.deck-item .project-card:hover {
+    transform: none;
+}
+
+.deck-nav {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 30px;
+}
+
+.deck-arrow {
+    display: inline-flex;
+    width: 40px;
+    height: 40px;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: var(--surface);
+    color: var(--text-2);
+    cursor: pointer;
+    transition: border-color .2s ease, color .2s ease, transform .2s ease;
+}
+
+.deck-arrow:hover {
+    border-color: var(--line-strong);
+    color: var(--brand);
+    transform: translateY(-2px);
+}
+
+.deck-arrow svg {
+    width: 16px;
+    height: 16px;
+}
+
+.deck-more {
+    margin: 26px 0 0;
+    text-align: center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .deck-item {
+        transition: none;
+    }
+}
+
+/* The defocus is decoration; at phone sizes the cards behind are mostly off
+   screen anyway and the blur only costs paint. */
+@media (max-width: 767px) {
+    .deck {
+        --blur1: 0px;
+        --blur2: .4px;
+    }
+}
+
+/* ---------- Active nav item ------------------------------------------------ */
+
+.topnav a.is-here,
+.mobile-nav a.is-here {
+    color: var(--brand);
+    font-weight: 700;
 }
 
 /* ---------- Connect -------------------------------------------------------- */
@@ -1335,126 +2041,6 @@ button.plink.is-private {
 
 /* ---------- Side panel ----------------------------------------------------- */
 
-.panel-toggle {
-    position: fixed;
-    right: 20px;
-    bottom: 20px;
-    z-index: 70;
-    width: 52px;
-    height: 52px;
-    border-radius: 15px;
-    border: 1px solid var(--line-strong);
-    background: var(--surface);
-    color: var(--text);
-    cursor: pointer;
-    display: grid;
-    place-items: center;
-    box-shadow: var(--shadow-lg);
-    transition: transform .25s ease;
-}
-
-.panel-toggle:hover {
-    transform: translateY(-3px);
-}
-
-.panel-toggle .lines {
-    display: grid;
-    gap: 4px;
-}
-
-.panel-toggle .lines span {
-    display: block;
-    width: 18px;
-    height: 2px;
-    border-radius: 2px;
-    background: currentColor;
-    transition: transform .3s ease, opacity .3s ease;
-}
-
-.panel-toggle.open .lines span:nth-child(1) {
-    transform: translateY(6px) rotate(45deg);
-}
-
-.panel-toggle.open .lines span:nth-child(2) {
-    opacity: 0;
-}
-
-.panel-toggle.open .lines span:nth-child(3) {
-    transform: translateY(-6px) rotate(-45deg);
-}
-
-.side-panel {
-    position: fixed;
-    right: 20px;
-    bottom: 84px;
-    z-index: 69;
-    width: 212px;
-    padding: 16px;
-    border-radius: 16px;
-    background: var(--surface);
-    border: 1px solid var(--line-strong);
-    box-shadow: var(--shadow-lg);
-    opacity: 0;
-    visibility: hidden;
-    transform: translateY(12px) scale(.96);
-    transform-origin: bottom right;
-    transition: opacity .28s ease, transform .28s cubic-bezier(.2, .8, .2, 1), visibility .28s;
-}
-
-.side-panel.open {
-    opacity: 1;
-    visibility: visible;
-    transform: none;
-}
-
-.side-panel h3 {
-    margin: 0 0 10px;
-    font-size: .72rem;
-    letter-spacing: .16em;
-    text-transform: uppercase;
-    color: var(--muted);
-    font-family: 'Space Grotesk', monospace;
-}
-
-.nav-list {
-    display: grid;
-    gap: 3px;
-}
-
-.nav-item {
-    text-align: left;
-    padding: 9px 12px;
-    border-radius: 9px;
-    border: none;
-    background: none;
-    color: var(--text-2);
-    font-family: inherit;
-    font-size: .9rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background .2s ease, color .2s ease;
-}
-
-.nav-item:hover {
-    background: var(--brand-soft);
-    color: var(--brand);
-}
-
-/* Focus pulse when jumping to a section */
-.focus-pulse {
-    animation: pulse 1s ease;
-}
-
-@keyframes pulse {
-    0% {
-        box-shadow: 0 0 0 0 color-mix(in srgb, var(--brand) 45%, transparent);
-    }
-
-    100% {
-        box-shadow: 0 0 0 18px transparent;
-    }
-}
-
 /* ---------- Reveal --------------------------------------------------------- */
 
 .reveal {
@@ -1518,13 +2104,6 @@ button.plink.is-private {
         display: grid;
     }
 
-    /* One navigation affordance at a time: the burger lives in the navbar on
-       mobile, so the floating quick-jump would be a duplicate. */
-    .panel-toggle,
-    .side-panel {
-        display: none;
-    }
-
     #resumeBtn {
         display: none;
     }
@@ -1565,14 +2144,37 @@ button.plink.is-private {
         padding: 22px;
     }
 
-    .project-head {
+    .project-card-body {
         padding: 18px;
-        align-items: flex-start;
-        flex-direction: column;
     }
 
-    .project-body-inner {
-        padding: 20px 18px 20px;
+    /* One column below this width; two narrow cards would crush the covers. */
+    .project-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    /* Full-height sheet on a phone: a centred dialog with margins wastes the
+       little room there is, and the content here is long. */
+    .psheet-layer {
+        padding: 0;
+    }
+
+    .psheet {
+        width: 100%;
+        max-height: 100%;
+        height: 100%;
+        border: 0;
+        border-radius: 0;
+    }
+
+    .psheet-split {
+        grid-template-columns: 1fr;
+        gap: 22px;
+    }
+
+    .pfeats {
+        grid-template-columns: 1fr;
     }
 
     .edu {
@@ -1590,6 +2192,12 @@ button.plink.is-private {
 /* ---------- Reduced motion ------------------------------------------------- */
 
 @media (prefers-reduced-motion: reduce) {
+
+    /* Freeze the lining rather than letting it crawl. */
+    .snake-modern .card::before {
+        animation: none;
+    }
+
 
     *,
     *::before,
@@ -1615,8 +2223,6 @@ button.plink.is-private {
 @media print {
 
     .topbar,
-    .panel-toggle,
-    .side-panel,
     .welcome-screen {
         display: none !important;
     }
@@ -1807,7 +2413,22 @@ button.plink.is-private {
     }
 }
 
-/* ---------- Contact modal -------------------------------------------------- */
+.contact-form-card {
+    margin-top: 26px;
+    padding: 30px;
+}
+
+.contact-form-card .modal-sub {
+    margin: 10px 0 22px;
+}
+
+@media (max-width: 720px) {
+    .contact-form-card {
+        padding: 22px;
+    }
+}
+
+/* ---------- Contact form (was a modal) -------------------------------------------------- */
 
 .modal {
     position: fixed;
